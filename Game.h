@@ -3,6 +3,7 @@
 #include"Player.h"
 #include"myLevel.h"
 #include"Timer.h"
+#include"Physics/CollisionChecker.h"
 #include<iostream>
 //class runs whole game
 class Game
@@ -14,6 +15,7 @@ private:
 	RenderWindow* window;
 	View* camera;
     Timer* timer;
+    CollisionChecker collision_checker;
 
 	enum GameState
 	{
@@ -41,6 +43,7 @@ private:
 	void draw_game_over();
 	void check_game_over_key_pressing();
 	
+	bool check_object_collides_wall(GameObject* object, int side);
 	void load_level();
 public:
 	Game();

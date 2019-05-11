@@ -6,6 +6,8 @@ Game::Game()
 	menu = new MainMenu();
 	level = new myLevel();
 	timer = new Timer(3.0f);
+	camera = new View();
+	camera->setSize(400.0f,420.0f);
 	
 	///////hero creating//////////
 	//////////////////////////////
@@ -15,7 +17,7 @@ Game::Game()
 	
 	graph_settings->drawable = true;
 	graph_settings->image = "images/char.png";
-	graph_settings->position = Vector2f(0.0f,0.0f);
+	graph_settings->position = Vector2f(80.0f,200.0f);
 	graph_settings->texture_rect = IntRect(0,0,64,64);
 	
 	phys_settings->width = 64;
@@ -75,6 +77,8 @@ void Game::run()
 }
 void Game::draw()
 {
+    
+    camera->setCenter(hero->get_position());
 	window->clear();
 	switch (current_state)
 	{
@@ -82,6 +86,7 @@ void Game::draw()
 		draw_main_menu();
 		break;
 	case GameState::game:
+        window->setView(*camera);
 		draw_game();
 		break;
 	case GameState::death:
@@ -135,19 +140,23 @@ void Game::check_game_key_pressing(float delta_time)
     
     if(kb::isKeyPressed(kb::A))
     {
-        hero->move(hero->Direction::left,delta_time);
+        bool collision = check_object_collides_wall(hero,Sides::left);
+        if(!collision) hero->move(hero->Direction::left,delta_time);
     }
     if(kb::isKeyPressed(kb::D))
     {
-        hero->move(hero->Direction::right,delta_time);
+        bool collision = check_object_collides_wall(hero,Sides::right);
+        if(!collision) hero->move(hero->Direction::right,delta_time);
     }
     if(kb::isKeyPressed(kb::W))
     {
-        hero->move(hero->Direction::up,delta_time);
+        bool collision = check_object_collides_wall(hero,Sides::top);
+        if(!collision)hero->move(hero->Direction::up,delta_time);
     }
     if(kb::isKeyPressed(kb::S))
     {
-        hero->move(hero->Direction::down,delta_time);
+        bool collision = check_object_collides_wall(hero,Sides::bottom);
+        if(!collision) hero->move(hero->Direction::down,delta_time);
     }
 }
 void Game::draw_game()
@@ -161,7 +170,7 @@ void Game::run_game()
     float elapsed_time = timer->get_elapsed_time().asMilliseconds();
     float delta_time = 1.0f;
     
-    //load_level();
+    load_level();
     check_game_key_pressing(delta_time);
     draw_game();
 }
@@ -170,6 +179,71 @@ void Game::load_level()
     if(!level_is_loaded)
     {
         level->load("levels/"+to_string(level_counter)+".json");
+        camera->zoom(2);
+        level_is_loaded = true;
     }
 }
+bool Game::check_object_collides_wall(GameObject* object, int side)
+{
+   vector<GameObject*> walls = level->get_walls();
+   CollisionCounter counter = collision_checker.count_object_collisions(hero,walls);
+   
+   switch(side)
+   {
+   case Sides::left:
+    if(counter.left_side_collisions>0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+    break;
+   case Sides::right:
+    if(counter.right_side_collisions>0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+    break; 
+   case Sides::top:
+    if(counter.top_side_collisions>0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+    break;
+   case Sides::bottom:
+    if(counter.bottom_side_collisions>0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+    break;
+   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
