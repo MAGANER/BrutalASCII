@@ -43,7 +43,8 @@ private:
 	void draw_game_over();
 	void check_game_over_key_pressing();
 	
-	bool check_object_collides_wall(GameObject* object, int side);
+	bool check_object_collides_other_object(GameObject* object, int side,vector<GameObject*>& objects);
+	bool check_hero_takes_gun();
 	void load_level();
 public:
 	Game();

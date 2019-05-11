@@ -140,22 +140,22 @@ void Game::check_game_key_pressing(float delta_time)
     
     if(kb::isKeyPressed(kb::A))
     {
-        bool collision = check_object_collides_wall(hero,Sides::left);
+        bool collision = check_object_collides_other_object(hero,Sides::left,level->get_walls());
         if(!collision) hero->move(hero->Direction::left,delta_time);
     }
     if(kb::isKeyPressed(kb::D))
     {
-        bool collision = check_object_collides_wall(hero,Sides::right);
+        bool collision = check_object_collides_other_object(hero,Sides::right,level->get_walls());
         if(!collision) hero->move(hero->Direction::right,delta_time);
     }
     if(kb::isKeyPressed(kb::W))
     {
-        bool collision = check_object_collides_wall(hero,Sides::top);
+        bool collision = check_object_collides_other_object(hero,Sides::top,level->get_walls());
         if(!collision)hero->move(hero->Direction::up,delta_time);
     }
     if(kb::isKeyPressed(kb::S))
     {
-        bool collision = check_object_collides_wall(hero,Sides::bottom);
+        bool collision = check_object_collides_other_object(hero,Sides::bottom,level->get_walls());
         if(!collision) hero->move(hero->Direction::down,delta_time);
     }
 }
@@ -169,9 +169,10 @@ void Game::run_game()
     timer->tic();
     float elapsed_time = timer->get_elapsed_time().asMilliseconds();
     float delta_time = 1.0f;
-    
     load_level();
+    
     check_game_key_pressing(delta_time);
+    check_hero_takes_gun();
     draw_game();
 }
 void Game::load_level()
@@ -183,10 +184,9 @@ void Game::load_level()
         level_is_loaded = true;
     }
 }
-bool Game::check_object_collides_wall(GameObject* object, int side)
+bool Game::check_object_collides_other_object(GameObject* object, int side,vector<GameObject*>& objects)
 {
-   vector<GameObject*> walls = level->get_walls();
-   CollisionCounter counter = collision_checker.count_object_collisions(hero,walls);
+   CollisionCounter counter = collision_checker.count_object_collisions(hero,objects);
    
    switch(side)
    {
@@ -232,7 +232,29 @@ bool Game::check_object_collides_wall(GameObject* object, int side)
     break;
    }
 }
-
+bool Game::check_hero_takes_gun()
+{
+    vector<GameObject*> guns = level->get_usable_objects();
+    
+    for(size_t i = 0; i<guns.size();++i)
+    {
+        string type = guns[i]->get_type();
+        
+        // level returns usable objects of ANY kind
+        // and there are other objects,except guns
+        // so it's needed to check 
+        bool is_gun = type == "pistol" || type == "cumgun" || type == "brutgun";
+        
+        bool collision = collision_checker.object_collides(hero,guns[i]);
+        if(is_gun && collision)
+        {
+            hero->set_ammo(1,type);
+            
+            //delete taken gun
+            level->get_usable_objects().erase(level->get_usable_objects().begin()+i);
+        }
+    }
+}
 
 
 
