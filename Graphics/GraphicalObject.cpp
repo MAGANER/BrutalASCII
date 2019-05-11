@@ -59,6 +59,7 @@ void GraphicalObject::set_image(string img)
     image_path = img;
 	gobject_img.loadFromFile(img);
 	//gobject_img.createMaskFromColor(Color::White); every object is white :) in this game
+	gobject_img.createMaskFromColor(Color::Black);
 	gobject_textr.loadFromImage(gobject_img);
 	gobject_spr.setTexture(gobject_textr);
 
