@@ -15,16 +15,18 @@ class Level
 protected:
     json data;
     string level_path;
+    
+    vector<GameObject*> objects;
 private:
 	GraphicalSettings load_graphical_data(int object_counter);
 	GameSettings  load_game_data(int object_counter);
 	PhysicalSettings load_physical_body_data(int object_counter);
 	
-	vector<GameObject*> objects;
+
 	
 public:
     Level();
-    ~Level();
+    virtual ~Level();
 
 	string get_level_path();
 	virtual void load(string level_path);

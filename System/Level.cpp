@@ -103,11 +103,6 @@ void Level::load(string level_path)
 }
 
 
-vector<GameObject*>& Level::get_ground()
-{
-	return ground;
-}
-
 
 
 
