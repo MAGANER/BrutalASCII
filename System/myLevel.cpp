@@ -31,7 +31,6 @@ void myLevel::sort_objects()
     while(object != objects.end())
     {
         string type = (*object)->get_type();
-        
         bool is_wall = type == "wall";
         bool is_gun = type == "pistol" || type == "cumgun" || type == "brutgun";
         bool is_trigger = type == "start";
@@ -53,7 +52,14 @@ void myLevel::sort_objects()
     // now it's useless
     objects.clear();
 }
-
-
+void myLevel::load(string level_path)
+{
+    Level::load(level_path);
+    sort_objects();
+}
+vector<GameObject*>& myLevel::get_walls()
+{
+    return walls;
+}
 
 

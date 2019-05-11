@@ -17,10 +17,11 @@ public:
     myLevel();
     ~myLevel();
     
-    vector<GameObject*> get_walls();
-    vector<GameObject*> get_usable_objects();
+    vector<GameObject*>& get_walls();
+    vector<GameObject*>& get_usable_objects();
     
     void draw(RenderWindow* window);
+    void load(string level_path);
 };
 
 #endif // MYLEVEL_H
