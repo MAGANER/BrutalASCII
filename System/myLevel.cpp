@@ -61,5 +61,8 @@ vector<GameObject*>& myLevel::get_walls()
 {
     return walls;
 }
-
+vector<GameObject*>& myLevel::get_usable_objects()
+{
+    return usable_objects;
+}
 
