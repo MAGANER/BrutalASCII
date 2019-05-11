@@ -3,11 +3,17 @@
 
 #include <GameObject.h>
 
-
+struct Ammo
+{
+    int pistol;
+    int cumgun;
+    int brutgun;
+};
 class Player : public GameObject
 {
 private:
-        
+    int health;
+    Ammo ammo;
 public:
     enum Direction
     {
@@ -21,8 +27,28 @@ public:
 
     void shoot();
     void move(int direction,float delta_time);
+    
+    void set_ammo(int ammo,string type);
+    Ammo get_ammo();
+    
+    void set_health(int health);
+    int get_health();
 
 
 };
 
 #endif // PLAYER_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
