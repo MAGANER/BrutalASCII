@@ -2,7 +2,6 @@
 #include"MainMenu.h"
 #include"Player.h"
 #include"myLevel.h"
-#include"Timer.h"
 #include"Physics/CollisionChecker.h"
 #include<iostream>
 //class runs whole game
@@ -10,11 +9,12 @@ class Game
 {
 private:
     Player* hero;
+    int hero_direction;
+    
     myLevel* level;
     MainMenu* menu;
 	RenderWindow* window;
 	View* camera;
-    Timer* timer;
     CollisionChecker collision_checker;
 
 	enum GameState
@@ -33,7 +33,7 @@ private:
 
 	void run_game();
 	void draw_game();
-	void check_game_key_pressing(float delta_time);
+	void check_game_key_pressing();
 
 	void run_main_menu();
 	void draw_main_menu();

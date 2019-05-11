@@ -5,7 +5,6 @@ Game::Game()
 	window = new RenderWindow(VideoMode(720, 640), "BrutalDeath");
 	menu = new MainMenu();
 	level = new myLevel();
-	timer = new Timer(3.0f);
 	camera = new View();
 	camera->setSize(400.0f,420.0f);
 	
@@ -134,35 +133,34 @@ void Game::run_main_menu()
     draw_main_menu();
 }
 
-void Game::check_game_key_pressing(float delta_time)
+void Game::check_game_key_pressing()
 {
     typedef Keyboard kb;     
     
-    int direction = hero->Direction::right;
     if(kb::isKeyPressed(kb::A))
     {
         bool collision = check_object_collides_other_object(hero,Sides::left,level->get_walls());
-        if(!collision) hero->move(hero->Direction::left,delta_time);
-        direction =  hero->Direction::left;
+        if(!collision) hero->move(hero->Direction::left);
+        hero_direction =  hero->Direction::left;
     }
     if(kb::isKeyPressed(kb::D))
     {
         bool collision = check_object_collides_other_object(hero,Sides::right,level->get_walls());
-        if(!collision) hero->move(hero->Direction::right,delta_time);
-        direction =  hero->Direction::right;
+        if(!collision) hero->move(hero->Direction::right);
+        hero_direction =  hero->Direction::right;
     }
     if(kb::isKeyPressed(kb::W))
     {
         bool collision = check_object_collides_other_object(hero,Sides::top,level->get_walls());
-        if(!collision)hero->move(hero->Direction::up,delta_time);
+        if(!collision)hero->move(hero->Direction::up);
     }
     if(kb::isKeyPressed(kb::S))
     {
         bool collision = check_object_collides_other_object(hero,Sides::bottom,level->get_walls());
-        if(!collision) hero->move(hero->Direction::down,delta_time);
+        if(!collision) hero->move(hero->Direction::down);
     }
     
-    hero->animate(direction);
+    hero->animate(hero_direction);
 }
 void Game::draw_game()
 {
@@ -171,12 +169,9 @@ void Game::draw_game()
 }
 void Game::run_game()
 {
-    timer->tic();
-    float elapsed_time = timer->get_elapsed_time().asMilliseconds();
-    float delta_time = 1.0f;
     load_level();
     
-    check_game_key_pressing(delta_time);
+    check_game_key_pressing();
     check_hero_takes_gun();
     draw_game();
 }

@@ -16,22 +16,22 @@ Player::~Player()
 
 }
 
-void Player::move(int direction,float delta_time)
+void Player::move(int direction)
 {
     update_position(get_position());
     switch(direction)
     {
     case Direction::left:
-        gobject_spr.move(-0.2f,0.0f);
+        gobject_spr.move(-0.6f,0.0f);
         break;
     case Direction::right:
-        gobject_spr.move(0.2f,0.0f);
+        gobject_spr.move(0.6f,0.0f);
         break;
     case Direction::up:
-        gobject_spr.move(0.0f,-0.2f);
+        gobject_spr.move(0.0f,-0.6f);
         break;
     case Direction::down:
-        gobject_spr.move(0.0f,0.2f);
+        gobject_spr.move(0.0f,0.6f);
         break;
     }
 }

@@ -34,7 +34,7 @@ public:
     ~Player();
 
     void shoot();
-    void move(int direction,float delta_time);
+    void move(int direction);
 
     bool has_any_ammo();    
     void set_ammo(int ammo,string type);
