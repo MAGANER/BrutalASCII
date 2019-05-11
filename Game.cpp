@@ -81,7 +81,7 @@ void Game::check_key_pressing()
 
 void Game::check_main_menu_key_pressing()
 {
-    if(Keyboard::isKeyPressed(Keyboard::Enter))
+    if(Keyboard::isKeyPressed(Keyboard::Space))
     {
         current_state = GameState::game;
         delete menu;
