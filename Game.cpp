@@ -138,15 +138,18 @@ void Game::check_game_key_pressing(float delta_time)
 {
     typedef Keyboard kb;     
     
+    int direction = hero->Direction::right;
     if(kb::isKeyPressed(kb::A))
     {
         bool collision = check_object_collides_other_object(hero,Sides::left,level->get_walls());
         if(!collision) hero->move(hero->Direction::left,delta_time);
+        direction =  hero->Direction::left;
     }
     if(kb::isKeyPressed(kb::D))
     {
         bool collision = check_object_collides_other_object(hero,Sides::right,level->get_walls());
         if(!collision) hero->move(hero->Direction::right,delta_time);
+        direction =  hero->Direction::right;
     }
     if(kb::isKeyPressed(kb::W))
     {
@@ -158,6 +161,8 @@ void Game::check_game_key_pressing(float delta_time)
         bool collision = check_object_collides_other_object(hero,Sides::bottom,level->get_walls());
         if(!collision) hero->move(hero->Direction::down,delta_time);
     }
+    
+    hero->animate(direction);
 }
 void Game::draw_game()
 {

@@ -8,6 +8,7 @@ Player::Player(GraphicalSettings graph_settings,
     ammo.brutgun = 0;
     ammo.cumgun = 0;
     ammo.pistol = 0;
+    current_gun = -1;
 }
 
 Player::~Player()
@@ -61,6 +62,70 @@ void Player::set_ammo(int ammo, string type)
         this->ammo.brutgun += ammo;
     }
 }
+bool Player::has_any_ammo()
+{
+    return ammo.brutgun+ammo.cumgun+ammo.pistol;
+}
+void Player::animate(int direction)
+{
+    bool only_pistol = ammo.pistol > 0 && ammo.brutgun == 0 && ammo.cumgun == 0;
+    bool only_cumgun = ammo.cumgun > 0 && ammo.brutgun == 0 && ammo.pistol == 0;
+    bool only_brutgun= ammo.brutgun > 0 && ammo.cumgun == 0 && ammo.pistol == 0;
+    if(only_brutgun)
+    {
+        current_gun = Guns::brutgun;
+    }
+    else if(only_cumgun)
+    {
+        current_gun = Guns::cumgun;
+    }
+    else if(only_pistol)
+    {
+        current_gun = Guns::pistol;
+    }
+    else
+    {
+        current_gun = -1; // no gun
+    }
+    if(direction == Direction::left)
+    {
+        switch(current_gun)
+        {
+        case Guns::pistol:
+            set_image("images/left_char_with_gun3.png");
+            break;
+        case Guns::cumgun:
+            set_image("images/left_char_with_gun1.png");
+            break;
+        case Guns::brutgun:
+            set_image("images/left_char_with_gun2.png");
+            break;
+        default:
+            set_image("images/left_char.png");
+            break;
+        }
+    }
+    if(direction == Direction::right)
+    {
+        switch(current_gun)
+        {
+        case Guns::pistol:
+            set_image("images/char_with_gun3.png");
+            break;
+        case Guns::cumgun:
+            set_image("images/char_with_gun1.png");
+            break;
+        case Guns::brutgun:
+            set_image("images/char_with_gun2.png");
+            break;
+        default:
+            set_image("images/char.png");
+            break;        
+         }
+    }
+}
+
+
 
 
 
