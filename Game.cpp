@@ -5,6 +5,7 @@ Game::Game()
 	window = new RenderWindow(VideoMode(720, 640), "BrutalDeath");
 	menu = new MainMenu();
 	level = new myLevel();
+	timer = new Timer(3.0f);
 	
 	///////hero creating//////////
 	//////////////////////////////
@@ -128,8 +129,26 @@ void Game::run_main_menu()
     draw_main_menu();
 }
 
-void Game::check_game_key_pressing()
+void Game::check_game_key_pressing(float delta_time)
 {
+    typedef Keyboard kb;     
+    
+    if(kb::isKeyPressed(kb::A))
+    {
+        hero->move(hero->Direction::left,delta_time);
+    }
+    if(kb::isKeyPressed(kb::D))
+    {
+        hero->move(hero->Direction::right,delta_time);
+    }
+    if(kb::isKeyPressed(kb::W))
+    {
+        hero->move(hero->Direction::up,delta_time);
+    }
+    if(kb::isKeyPressed(kb::S))
+    {
+        hero->move(hero->Direction::down,delta_time);
+    }
 }
 void Game::draw_game()
 {
@@ -138,8 +157,12 @@ void Game::draw_game()
 }
 void Game::run_game()
 {
+    timer->tic();
+    float elapsed_time = timer->get_elapsed_time().asMilliseconds();
+    float delta_time = 1.0f;
+    
     //load_level();
-    check_game_key_pressing();
+    check_game_key_pressing(delta_time);
     draw_game();
 }
 void Game::load_level()

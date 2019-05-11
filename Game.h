@@ -2,6 +2,7 @@
 #include"MainMenu.h"
 #include"Player.h"
 #include"myLevel.h"
+#include"Timer.h"
 #include<iostream>
 //class runs whole game
 class Game
@@ -12,7 +13,7 @@ private:
     MainMenu* menu;
 	RenderWindow* window;
 	View* camera;
-
+    Timer* timer;
 
 	enum GameState
 	{
@@ -30,7 +31,7 @@ private:
 
 	void run_game();
 	void draw_game();
-	void check_game_key_pressing();
+	void check_game_key_pressing(float delta_time);
 
 	void run_main_menu();
 	void draw_main_menu();
