@@ -5,6 +5,7 @@ Game::Game()
 	window = new RenderWindow(VideoMode(720, 640), "BrutalDeath");
 	menu = new MainMenu();
 	game_over = new GameOverMenu();
+	parameters_panel = new Parameters();
 	level = new myLevel();
 	camera = new View();
 	camera->setSize(400.0f,420.0f);
@@ -43,6 +44,7 @@ Game::~Game()
 {
 	delete window;
 	delete game_over;
+	delete parameters_panel;
 	delete level;
 	delete camera;
 	delete hero;
@@ -198,6 +200,9 @@ void Game::draw_game()
     level->draw(window);
     window->draw(hero->returnSprite());
     draw_bullets();
+    
+    window->setView(window->getDefaultView());
+    parameters_panel->draw(window);
 }
 void Game::run_game()
 {
@@ -205,7 +210,9 @@ void Game::run_game()
     check_hero_takes_gun();
     check_bullets_collided_walls();
     check_hero_died();
+    
     draw_game();
+    parameters_panel->update(hero->get_ammo(),hero->get_health());
 }
 void Game::load_level()
 {

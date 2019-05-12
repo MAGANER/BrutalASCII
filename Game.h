@@ -1,6 +1,7 @@
 #pragma once
 #include"MainMenu.h"
 #include"GameOverMenu.h"
+#include"Parameters.h"
 #include"Player.h"
 #include"myLevel.h"
 #include"Physics/CollisionChecker.h"
@@ -16,6 +17,7 @@ private:
     myLevel* level;
     MainMenu* menu;
     GameOverMenu* game_over;
+    Parameters* parameters_panel;
 	RenderWindow* window;
 	View* camera;
     CollisionChecker collision_checker;
