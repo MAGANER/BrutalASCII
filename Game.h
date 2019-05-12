@@ -48,6 +48,7 @@ private:
 	void check_game_over_key_pressing();
 	
 	bool check_object_collides_other_object(GameObject* object, int side,vector<GameObject*>& objects);
+	void check_bullets_collided_walls();
 	bool check_hero_takes_gun();
 	void load_level();
 	void draw_bullets();

@@ -197,6 +197,7 @@ void Game::run_game()
     
     check_game_key_pressing();
     check_hero_takes_gun();
+    check_bullets_collided_walls();
     draw_game();
 }
 void Game::load_level()
@@ -288,7 +289,21 @@ void Game::draw_bullets()
     }
 }
 
-
+void Game::check_bullets_collided_walls()
+{
+    vector<GameObject*> walls = level->get_walls();
+    for(size_t wall = 0; wall<walls.size();++wall)
+    {
+        for(size_t bullet = 0; bullet<hero_bullets.size();++bullet)
+        {
+            bool collision = collision_checker.object_collides(hero_bullets[bullet],walls[wall]);
+            if(collision)
+            {
+                hero_bullets.erase(hero_bullets.begin()+bullet);
+            }
+        }
+    }
+}
 
 
 
