@@ -4,9 +4,11 @@ Game::Game()
 {
 	window = new RenderWindow(VideoMode(720, 640), "BrutalDeath");
 	menu = new MainMenu();
+	game_over = new GameOverMenu();
 	level = new myLevel();
 	camera = new View();
 	camera->setSize(400.0f,420.0f);
+	camera->zoom(2);
 	
 	///////hero creating//////////
 	//////////////////////////////
@@ -40,6 +42,10 @@ Game::Game()
 Game::~Game()
 {
 	delete window;
+	delete game_over;
+	delete level;
+	delete camera;
+	delete hero;
 }
 
 void Game::check_window_events()
@@ -69,7 +75,7 @@ void Game::run()
 			run_game();
 			break;
 		case GameState::death:
-			//run_game_over();
+			run_game_over();
 			break;
 		}
 		draw();
@@ -91,7 +97,8 @@ void Game::draw()
 		draw_game();
 		break;
 	case GameState::death:
-		//draw_game_over();
+	    window->setView(window->getDefaultView());
+		draw_game_over();
 		break;
 	}
 	window->display();
@@ -104,10 +111,10 @@ void Game::check_key_pressing()
 		check_main_menu_key_pressing();
 		break;
 	case GameState::game:
-		//check_game_key_pressing();
+		check_game_key_pressing();
 		break;
 	case GameState::death:
-		//check_game_over_key_pressing();
+		check_game_over_key_pressing();
 		break;
 	}
 }
@@ -125,6 +132,7 @@ void Game::check_main_menu_key_pressing()
         window->close();
     }
 }
+
 void Game::draw_main_menu()
 {
     menu->draw(window);
@@ -194,10 +202,9 @@ void Game::draw_game()
 void Game::run_game()
 {
     load_level();
-    
-    check_game_key_pressing();
     check_hero_takes_gun();
     check_bullets_collided_walls();
+    check_hero_died();
     draw_game();
 }
 void Game::load_level()
@@ -205,7 +212,6 @@ void Game::load_level()
     if(!level_is_loaded)
     {
         level->load("levels/"+to_string(level_counter)+".json");
-        camera->zoom(2);
         level_is_loaded = true;
     }
 }
@@ -304,9 +310,34 @@ void Game::check_bullets_collided_walls()
         }
     }
 }
-
-
-
+void Game::check_hero_died()
+{
+    if(hero->get_health() <= 0)
+    {
+        current_state = GameState::death;
+        
+        // level will be begun from the start
+        // so clear level and reload it
+        level_is_loaded = false;
+        level->clear();
+    }
+}
+void Game::run_game_over()
+{
+    draw_game_over();
+}
+void Game::draw_game_over()
+{
+    game_over->draw(window);
+}
+void Game::check_game_over_key_pressing()
+{
+    if(Keyboard::isKeyPressed(Keyboard::Space))
+    {
+        current_state = GameState::game;
+        hero->set_health(5);
+    }
+}
 
 
 

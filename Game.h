@@ -1,5 +1,6 @@
 #pragma once
 #include"MainMenu.h"
+#include"GameOverMenu.h"
 #include"Player.h"
 #include"myLevel.h"
 #include"Physics/CollisionChecker.h"
@@ -14,6 +15,7 @@ private:
     
     myLevel* level;
     MainMenu* menu;
+    GameOverMenu* game_over;
 	RenderWindow* window;
 	View* camera;
     CollisionChecker collision_checker;
@@ -52,6 +54,7 @@ private:
 	bool check_hero_takes_gun();
 	void load_level();
 	void draw_bullets();
+	void check_hero_died();
 public:
 	Game();
 	~Game();
