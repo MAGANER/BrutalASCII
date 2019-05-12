@@ -34,6 +34,8 @@ Game::Game()
 	current_state = GameState::main_menu;
 	level_is_loaded = false;
 	level_counter = 0;
+	
+	key_is_pressed = false;
 }
 Game::~Game()
 {
@@ -159,6 +161,27 @@ void Game::check_game_key_pressing()
         bool collision = check_object_collides_other_object(hero,Sides::bottom,level->get_walls());
         if(!collision) hero->move(hero->Direction::down);
     }
+    if(kb::isKeyPressed(kb::Num1))
+    {
+        hero->choose_new_gun(0);
+    }
+    if(kb::isKeyPressed(kb::Num2))
+    {
+        hero->choose_new_gun(1);
+    }
+    if(kb::isKeyPressed(kb::Num3))
+    {
+        hero->choose_new_gun(2);
+    }
+    if(kb::isKeyPressed(kb::Space) && !key_is_pressed)
+    {
+        hero->shoot(hero_bullets);
+        key_is_pressed = true;
+    }
+    if(!kb::isKeyPressed(kb::Space))
+    {
+        key_is_pressed = false;
+    }
     
     hero->animate(hero_direction);
 }
@@ -166,6 +189,7 @@ void Game::draw_game()
 {
     level->draw(window);
     window->draw(hero->returnSprite());
+    draw_bullets();
 }
 void Game::run_game()
 {
@@ -255,7 +279,14 @@ bool Game::check_hero_takes_gun()
         }
     }
 }
-
+void Game::draw_bullets()
+{
+    for(size_t bullet = 0; bullet<hero_bullets.size();++bullet)
+    {
+        hero_bullets[bullet]->move();
+        window->draw(hero_bullets[bullet]->returnSprite());
+    }
+}
 
 
 

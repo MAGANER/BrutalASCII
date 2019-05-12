@@ -3,6 +3,7 @@
 #include"Player.h"
 #include"myLevel.h"
 #include"Physics/CollisionChecker.h"
+#include"Bullet.h"
 #include<iostream>
 //class runs whole game
 class Game
@@ -16,6 +17,8 @@ private:
 	RenderWindow* window;
 	View* camera;
     CollisionChecker collision_checker;
+    
+    vector<Bullet*> hero_bullets;
 
 	enum GameState
 	{
@@ -26,6 +29,7 @@ private:
 	int current_state;
 	bool level_is_loaded;
 	int level_counter;
+	bool key_is_pressed;
 private:
 	void check_window_events();
 	void check_key_pressing();
@@ -46,6 +50,7 @@ private:
 	bool check_object_collides_other_object(GameObject* object, int side,vector<GameObject*>& objects);
 	bool check_hero_takes_gun();
 	void load_level();
+	void draw_bullets();
 public:
 	Game();
 	~Game();
