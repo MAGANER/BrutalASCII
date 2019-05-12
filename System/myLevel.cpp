@@ -65,4 +65,10 @@ vector<GameObject*>& myLevel::get_usable_objects()
 {
     return usable_objects;
 }
+void myLevel::clear()
+{
+    walls.clear();
+    usable_objects.clear();
+    triggers.clear();
+}
 

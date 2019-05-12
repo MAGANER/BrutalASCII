@@ -22,6 +22,8 @@ public:
     
     void draw(RenderWindow* window);
     void load(string level_path);
+    
+    void clear();
 };
 
 #endif // MYLEVEL_H
