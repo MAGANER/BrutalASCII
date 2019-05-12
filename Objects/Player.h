@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-
-#include <GameObject.h>
+#include<vector>
+#include"Bullet.h"
 
 struct Ammo
 {
@@ -22,6 +22,8 @@ private:
         brutgun
     };
     int current_gun;
+    
+    int shooting_direction;
 public:
     enum Direction
     {
@@ -33,7 +35,7 @@ public:
     Player(GraphicalSettings graph_settings,PhysicalSettings phys_settings, GameSettings game_settings);
     ~Player();
 
-    void shoot();
+    void shoot(vector<Bullet*>& hero_bullets);
     void move(int direction);
 
     bool has_any_ammo();    
@@ -45,8 +47,7 @@ public:
     
     void animate(int direction);
     
-
-
+    void choose_new_gun(int gun_number);
 };
 
 #endif // PLAYER_H
