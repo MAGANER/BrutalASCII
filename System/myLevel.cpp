@@ -33,7 +33,8 @@ void myLevel::draw(RenderWindow* window)
     auto trigger = triggers.begin();
     while(trigger != triggers.end())
     {
-        window->draw((*trigger)->returnSprite());
+        bool is_drawable = (*trigger)->is_drawable();
+        if(is_drawable)window->draw((*trigger)->returnSprite());
         ++trigger;
     }
     
