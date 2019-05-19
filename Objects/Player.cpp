@@ -9,13 +9,15 @@ Player::Player(GraphicalSettings graph_settings,
     ammo.cumgun = 0;
     ammo.pistol = 0;
     current_gun = -1;
+    
+    key_is_pressed = false;
+    
 }
 
 Player::~Player()
 {
 
 }
-
 void Player::move(int direction)
 {
     update_position(get_position()); // update position of physical body
@@ -23,18 +25,24 @@ void Player::move(int direction)
     switch(direction)
     {
     case Direction::left:
-        gobject_spr.move(-0.6f,0.0f);
+        gobject_spr.move(-0.5f,0.0f);
         shooting_direction = Bullet::Direction::left;
+        moving_direction = Direction::left;
+        animation_direction = moving_direction;
         break;
     case Direction::right:
-        gobject_spr.move(0.6f,0.0f);
+        gobject_spr.move(0.5f,0.0f);
         shooting_direction = Bullet::Direction::right;
+        moving_direction = Direction::right;
+        animation_direction = moving_direction;
         break;
     case Direction::up:
-        gobject_spr.move(0.0f,-0.6f);
+        gobject_spr.move(0.0f,-0.5f);
+        moving_direction = Direction::up;
         break;
     case Direction::down:
-        gobject_spr.move(0.0f,0.6f);
+        gobject_spr.move(0.0f,0.5f);
+        moving_direction = Direction::down;
         break;
     }
 }
@@ -70,7 +78,7 @@ bool Player::has_any_ammo()
     // checks can hero shoot any gun
     return ammo.brutgun+ammo.cumgun+ammo.pistol;
 }
-void Player::animate(int direction)
+void Player::animate()
 {
     bool only_pistol = ammo.pistol > 0 && ammo.brutgun == 0 && ammo.cumgun == 0;
     bool only_cumgun = ammo.cumgun > 0 && ammo.brutgun == 0 && ammo.pistol == 0;
@@ -91,7 +99,7 @@ void Player::animate(int direction)
     {
         current_gun = -1; // no gun
     }
-    if(direction == Direction::left)
+    if(animation_direction == Direction::left)
     {
         switch(current_gun)
         {
@@ -109,7 +117,7 @@ void Player::animate(int direction)
             break;
         }
     }
-    if(direction == Direction::right)
+    if(animation_direction == Direction::right)
     {
         switch(current_gun)
         {
@@ -254,7 +262,10 @@ void Player::choose_new_gun(int gun_number)
     }
 }
 
-
+int Player::get_direction()
+{
+    return moving_direction;
+}
 
 
 

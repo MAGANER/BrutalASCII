@@ -55,13 +55,5 @@ public:
     bool object_collides(GameObject* objectA, GameObject * objectB);
     bool object_collides(PhysicalSettings objectA_settings,PhysicalSettings objectB_settings);
 };
-enum Sides
-{
-    left,
-    right,
-    bottom,
-    top
-};
-
 
 #endif // COLLISIONCHECKER_H

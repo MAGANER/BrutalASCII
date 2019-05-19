@@ -2,7 +2,10 @@
 #define PLAYER_H
 #include<vector>
 #include"Bullet.h"
+#include"Physics/Direction.h"
 
+
+// counter of ammo
 struct Ammo
 {
     int pistol;
@@ -24,31 +27,32 @@ private:
     };
     int current_gun;
     
-    int shooting_direction;
+    int shooting_direction; // direction of bullet
+    int moving_direction;
+    int animation_direction; // left of right
+    
+    bool key_is_pressed;
 public:
-    enum Direction
-    {
-        left,
-        right,
-        up,
-        down
-    };
     Player(GraphicalSettings graph_settings,PhysicalSettings phys_settings, GameSettings game_settings);
     ~Player();
 
     void shoot(vector<Bullet*>& hero_bullets);
     void move(int direction);
+    int get_direction();
 
     bool has_any_ammo();    
     void set_ammo(int ammo,string type);
     Ammo get_ammo();
-    
+    void choose_new_gun(int gun_number);
+        
     void set_health(int health);
     int get_health();
     
-    void animate(int direction);
+    void animate();
     
-    void choose_new_gun(int gun_number);
+
+    
+    void check_key_pressing(vector<Bullet*>& hero_bullets);
 
 private:
     // all guns have different speed, count of shoots, damage e.t.c
