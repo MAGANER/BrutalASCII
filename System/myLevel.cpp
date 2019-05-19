@@ -28,6 +28,15 @@ void myLevel::draw(RenderWindow* window)
         window->draw((*usable_object)->returnSprite());
         ++usable_object;
     }
+    
+    //draw triggers
+    auto trigger = triggers.begin();
+    while(trigger != triggers.end())
+    {
+        window->draw((*trigger)->returnSprite());
+        ++trigger;
+    }
+    
 }
 void myLevel::sort_objects()
 {
@@ -40,7 +49,7 @@ void myLevel::sort_objects()
         
         bool is_wall = type == "wall";
         bool is_gun = type == "pistol" || type == "cumgun" || type == "brutgun";
-        bool is_trigger = type == "start";
+        bool is_trigger = type == "start" || type == "level_portal";
         
         if(is_wall)
         {
@@ -52,7 +61,7 @@ void myLevel::sort_objects()
         }
         else if(is_trigger)
         {
-            usable_objects.push_back(*object);
+            triggers.push_back(*object);
         }
         ++object;
     }
@@ -79,4 +88,32 @@ void myLevel::clear()
     usable_objects.clear();
     triggers.clear();
 }
+Vector2f myLevel::get_hero_start()
+{
+    auto trigger = triggers.begin();
+    while(trigger != triggers.end())
+    {
+        string type = (*trigger)->get_type();
+        if(type == "start")
+        {
+            return (*trigger)->get_position();
+        }
+        ++trigger;
+    }
+}
+GameObject* myLevel::get_trigger(string type)
+{
+    auto trigger = triggers.begin();
+    while(trigger != triggers.end())
+    {
+        string current_trigger_type = (*trigger)->get_type();
+        if(type == current_trigger_type)
+        {
+            return (*trigger);
+        }
+        ++trigger;
+    }
+}
+
+
 
