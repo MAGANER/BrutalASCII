@@ -20,15 +20,17 @@ int Bullet::get_damage()
 }
 void Bullet::move()
 {
+    update_position(get_position()); // update position of physical body
+     
     if(direction == Direction::left)
     {
-        gobject_spr.move(-0.6f,0.0f);
+        gobject_spr.move(-speed.x,speed.y);
     }
     if(direction == Direction::right)
     {
-        gobject_spr.move(0.6f,0.0f);
+        gobject_spr.move(speed.x,speed.y);
     }
-    update_position(get_position());
+   
 }
 void Bullet::set_direction(int new_direction)
 {
