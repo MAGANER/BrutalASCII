@@ -11,6 +11,9 @@ myLevel::~myLevel()
 
 void myLevel::draw(RenderWindow* window)
 {
+    /// draw whole level
+    
+    //draw walls
     auto wall = walls.begin();
     while(wall != walls.end())
     {
@@ -18,6 +21,7 @@ void myLevel::draw(RenderWindow* window)
         ++wall;
     }
     
+    //draw usable objects
     auto usable_object = usable_objects.begin();
     while(usable_object != usable_objects.end())
     {
@@ -27,13 +31,17 @@ void myLevel::draw(RenderWindow* window)
 }
 void myLevel::sort_objects()
 {
+    
+    // sort objects,relating to their types
     auto object = objects.begin();
     while(object != objects.end())
     {
         string type = (*object)->get_type();
+        
         bool is_wall = type == "wall";
         bool is_gun = type == "pistol" || type == "cumgun" || type == "brutgun";
         bool is_trigger = type == "start";
+        
         if(is_wall)
         {
             walls.push_back(*object);

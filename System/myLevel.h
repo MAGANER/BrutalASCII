@@ -4,12 +4,16 @@
 #include <Level.h>
 #include"Player.h"
 
-
+/*
+ when all data is loaded to objects vector
+ all of them must be sorted into different vectors,
+ relating to their types
+*/
 class myLevel : public Level
 {
 private:
     vector<GameObject*> walls;
-    vector<GameObject*> usable_objects;//gun ammo
+    vector<GameObject*> usable_objects;//gun, ammo e.t.c
     vector<GameObject*> triggers;
     
     void sort_objects(); // loaded from file
@@ -20,8 +24,8 @@ public:
     vector<GameObject*>& get_walls();
     vector<GameObject*>& get_usable_objects();
     
-    void draw(RenderWindow* window);
-    void load(string level_path);
+    void draw(RenderWindow* window); // level
+    void load(string level_path); // load objects and then sort them
     
     void clear();
 };

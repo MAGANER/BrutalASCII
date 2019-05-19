@@ -9,7 +9,10 @@
 using namespace std;
 using nlohmann::json;
 
-
+/*
+ basic level class, that loads all objects
+ from json file into one vector
+*/
 class Level
 {
 protected:

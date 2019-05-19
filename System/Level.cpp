@@ -18,7 +18,6 @@ PhysicalSettings Level::load_physical_body_data(int object_counter)
 	float x = data["world"][to_string(object_counter)].at(0);
 	float y = data["world"][to_string(object_counter)].at(1);
 	settings.main_vertex = Vector2f(x, y);
-	//settings.position = Vector2f(x, y);
 
 	float width = data["world"][to_string(object_counter)][6].at(0);
 	float height = data["world"][to_string(object_counter)][6].at(1);
@@ -68,6 +67,7 @@ GameSettings Level::load_game_data(int object_counter)
 
 void Level::load(string level_path)
 {
+    //load data to json object
 	ifstream file(level_path);
 	if (file.fail())
 	{
@@ -78,7 +78,10 @@ void Level::load(string level_path)
 	file >> data;
 	file.close();
 
-
+    /*
+     get data from json object until this one is not empty
+     when data is got, create object and push it back to vector
+    */
 	int object_counter = 0;
 	bool loading = true;
 	while (loading)
