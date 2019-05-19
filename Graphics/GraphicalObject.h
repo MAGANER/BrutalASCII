@@ -1,9 +1,4 @@
-/*
-  GraphicalObject is base class for
-  Object class.
-  This is drawable part of Object,
-  that is used to draw objects.
-*/
+
 #pragma once
 
 #include"SFML/Graphics.hpp"
@@ -12,6 +7,7 @@ using namespace sf;
 using namespace std;
 
 
+// pass graphical settings to constructor
 struct GraphicalSettings
 {
     Vector2f position;
@@ -30,6 +26,12 @@ struct GraphicalSettings
     }
 };
 
+/*
+  GraphicalObject is base class for
+  Object class.
+  This is drawable part of Object,
+  that is used to draw objects.
+*/
 class GraphicalObject
 {
 private:
