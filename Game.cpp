@@ -184,6 +184,7 @@ void Game::run_game()
     check_hero_takes_gun();
     check_bullets_collided_walls();
     check_hero_died();
+    check_hero_teleports_to_next_level();
     
     /// update count of hero's ammo and health counter
     parameters_panel->update(hero->get_ammo(),hero->get_health());
@@ -233,6 +234,7 @@ void Game::load_level()
     if(!level_is_loaded)
     {
         level->load("levels/"+to_string(level_counter)+".json");
+        hero->set_position(level->get_hero_start());
         level_is_loaded = true;
     }
 }
@@ -321,7 +323,16 @@ void Game::check_hero_died()
 
 void Game::check_hero_teleports_to_next_level()
 {
+    GameObject* portal = level->get_trigger("level_portal");
+    CollisionCounter counter = collision_checker.count_object_collisions(hero,portal);
+    int collision = counter.get_collisions_summ();
     
+    if(collision > 0)
+    {
+        level->clear();
+        level_counter++;
+        level_is_loaded = false;
+    }
 }
 
 
