@@ -80,25 +80,6 @@ bool Player::has_any_ammo()
 }
 void Player::animate()
 {
-    bool only_pistol = ammo.pistol > 0 && ammo.brutgun == 0 && ammo.cumgun == 0;
-    bool only_cumgun = ammo.cumgun > 0 && ammo.brutgun == 0 && ammo.pistol == 0;
-    bool only_brutgun= ammo.brutgun > 0 && ammo.cumgun == 0 && ammo.pistol == 0;
-    if(only_brutgun)
-    {
-        current_gun = Guns::brutgun;
-    }
-    else if(only_cumgun)
-    {
-        current_gun = Guns::cumgun;
-    }
-    else if(only_pistol)
-    {
-        current_gun = Guns::pistol;
-    }
-    else
-    {
-        current_gun = -1; // no gun
-    }
     if(animation_direction == Direction::left)
     {
         switch(current_gun)
@@ -161,14 +142,32 @@ void Player::shoot(vector<Bullet*>& hero_bullets)
     if(current_gun == Guns::pistol && ammo.pistol > 0)
     {
         shoot_pistol(hero_bullets,graph_settings,phys_settings,game_settings);
+        
+        // when hero has no ammo, hide his current gun
+        if(ammo.pistol == 0)
+        {
+            current_gun = -1;
+        }
     }
     if(current_gun == Guns::cumgun && ammo.cumgun > 0)
     {
         shoot_cumgun(hero_bullets,graph_settings,phys_settings,game_settings);
+        
+        // when hero has no ammo, hide his current gun
+        if(ammo.cumgun == 0)
+        {
+            current_gun = -1;
+        }
     }
     if(current_gun == Guns::brutgun && ammo.brutgun > 0)
     {
         shoot_brutgun(hero_bullets,graph_settings,phys_settings,game_settings);
+        
+        // when hero has no ammo, hide his current gun
+        if(ammo.brutgun == 0)
+        {
+            current_gun = -1;
+        }
     }
 
 }
@@ -218,7 +217,7 @@ void Player::shoot_brutgun(vector<Bullet*>& hero_bullets,
     grsettings.image = "images/brutgun_bullet.png";
     
     // first bullet flies forward
-    psettings.speed = Vector2f(0.5f,0.0f);
+    psettings.speed = Vector2f(0.7f,0.0f);
     bullet1 = new Bullet(grsettings,psettings,gsettings,damage);
     bullet1->set_direction(shooting_direction);
     hero_bullets.push_back(bullet1);
@@ -255,7 +254,6 @@ void Player::choose_new_gun(int gun_number)
             current_gun = Guns::brutgun;
         break;
     }
-    
     if(!has_any_ammo())
     {
         current_gun = -1;
