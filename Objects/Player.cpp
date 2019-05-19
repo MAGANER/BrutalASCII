@@ -18,7 +18,8 @@ Player::~Player()
 
 void Player::move(int direction)
 {
-    update_position(get_position());
+    update_position(get_position()); // update position of physical body
+    
     switch(direction)
     {
     case Direction::left:
@@ -66,6 +67,7 @@ void Player::set_ammo(int ammo, string type)
 }
 bool Player::has_any_ammo()
 {
+    // checks can hero shoot any gun
     return ammo.brutgun+ammo.cumgun+ammo.pistol;
 }
 void Player::animate(int direction)
@@ -128,7 +130,6 @@ void Player::animate(int direction)
 }
 void Player::shoot(vector<Bullet*>& hero_bullets)
 {
-    Bullet* bullet;
     GraphicalSettings graph_settings;
     graph_settings.drawable = true;
     graph_settings.rotation = 0.0f;
@@ -151,30 +152,84 @@ void Player::shoot(vector<Bullet*>& hero_bullets)
     
     if(current_gun == Guns::pistol && ammo.pistol > 0)
     {
-        graph_settings.image = "images/pistol_bullet.png";
-        bullet = new Bullet(graph_settings,phys_settings,game_settings,1);
-        bullet->set_direction(shooting_direction);
-        hero_bullets.push_back(bullet);
-        ammo.pistol-=1;
+        shoot_pistol(hero_bullets,graph_settings,phys_settings,game_settings);
     }
     if(current_gun == Guns::cumgun && ammo.cumgun > 0)
     {
-        graph_settings.image = "images/cumgun_bullet.png";
-        bullet = new Bullet(graph_settings,phys_settings,game_settings,2);
-        bullet->set_direction(shooting_direction);
-        hero_bullets.push_back(bullet);
-        ammo.cumgun-=1;
+        shoot_cumgun(hero_bullets,graph_settings,phys_settings,game_settings);
     }
     if(current_gun == Guns::brutgun && ammo.brutgun > 0)
     {
-        graph_settings.image = "images/brutgun_bullet.png";
-        bullet = new Bullet(graph_settings,phys_settings,game_settings,3);
-        bullet->set_direction(shooting_direction);
-        hero_bullets.push_back(bullet);
-        ammo.brutgun-=1;
+        shoot_brutgun(hero_bullets,graph_settings,phys_settings,game_settings);
     }
 
 }
+void Player::shoot_pistol(vector<Bullet*>& hero_bullets,
+                          GraphicalSettings& grsettings,
+                          PhysicalSettings& psettings,
+                          GameSettings& gsettings)
+{
+    Bullet* bullet;
+    
+    psettings.speed = Vector2f(0.6f,0.0f);
+    grsettings.image = "images/pistol_bullet.png";
+    int damage = 1;
+        
+    bullet = new Bullet(grsettings,psettings,gsettings,damage);
+    bullet->set_direction(shooting_direction);
+        
+    hero_bullets.push_back(bullet);
+    ammo.pistol-=1;
+}
+void Player::shoot_cumgun(vector<Bullet*>& hero_bullets,
+                          GraphicalSettings& grsettings,
+                          PhysicalSettings& psettings,
+                          GameSettings& gsettings)
+{
+    Bullet* bullet;
+    
+    psettings.speed = Vector2f(0.8f,0.0f);
+    grsettings.image = "images/cumgun_bullet.png";
+    int damage = 2;
+    
+    bullet = new Bullet(grsettings,psettings,gsettings,damage);
+    bullet->set_direction(shooting_direction);
+    hero_bullets.push_back(bullet);
+    ammo.cumgun-=1;
+}
+void Player::shoot_brutgun(vector<Bullet*>& hero_bullets,
+                           GraphicalSettings& grsettings,
+                           PhysicalSettings& psettings,
+                           GameSettings& gsettings)
+{
+    Bullet* bullet1;
+    Bullet* bullet2;
+    Bullet* bullet3;
+    
+    int damage = 3;
+    grsettings.image = "images/brutgun_bullet.png";
+    
+    // first bullet flies forward
+    psettings.speed = Vector2f(0.5f,0.0f);
+    bullet1 = new Bullet(grsettings,psettings,gsettings,damage);
+    bullet1->set_direction(shooting_direction);
+    hero_bullets.push_back(bullet1);
+    
+    //second bullet flies down
+    psettings.speed = Vector2f(0.3f,0.2f);
+    bullet2 = new Bullet(grsettings,psettings,gsettings,damage);
+    bullet2->set_direction(shooting_direction);
+    hero_bullets.push_back(bullet2);
+    
+    //third bullet flies up
+    psettings.speed = Vector2f(0.3f,-0.2f);
+    bullet3 = new Bullet(grsettings,psettings,gsettings,damage);
+    bullet3->set_direction(shooting_direction);
+    hero_bullets.push_back(bullet3);
+    
+    ammo.brutgun-=1;
+}
+
 void Player::choose_new_gun(int gun_number)
 {
     switch(gun_number)
@@ -192,6 +247,7 @@ void Player::choose_new_gun(int gun_number)
             current_gun = Guns::brutgun;
         break;
     }
+    
     if(!has_any_ammo())
     {
         current_gun = -1;

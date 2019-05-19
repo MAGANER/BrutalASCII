@@ -15,6 +15,7 @@ private:
     int health;
     Ammo ammo;
     
+    //guns' types
     enum Guns
     {
         pistol,
@@ -48,6 +49,23 @@ public:
     void animate(int direction);
     
     void choose_new_gun(int gun_number);
+
+private:
+    // all guns have different speed, count of shoots, damage e.t.c
+    void shoot_brutgun(vector<Bullet*>& hero_bullets,
+                       GraphicalSettings& grsettings,
+                       PhysicalSettings& psettings,
+                       GameSettings& gsettings);
+                       
+    void shoot_pistol(vector<Bullet*>& hero_bullets,
+                       GraphicalSettings& grsettings,
+                       PhysicalSettings& psettings,
+                       GameSettings& gsettings);
+                       
+    void shoot_cumgun(vector<Bullet*>& hero_bullets,
+                       GraphicalSettings& grsettings,
+                       PhysicalSettings& psettings,
+                       GameSettings& gsettings);
 };
 
 #endif // PLAYER_H
