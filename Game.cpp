@@ -7,9 +7,11 @@ Game::Game()
 	game_over = new GameOverMenu();
 	parameters_panel = new Parameters();
 	level = new myLevel();
+	
 	camera = new View();
 	camera->setSize(400.0f,420.0f);
 	camera->zoom(2);
+	
 	
 	///////hero creating//////////
 	//////////////////////////////
@@ -34,9 +36,11 @@ Game::Game()
 	delete game_settings;
 	//////////////////////////////
 
-	current_state = GameState::main_menu;
-	level_is_loaded = false;
-	level_counter = 0;
+	
+	menu_is_deleted = false;
+	current_state = GameState::main_menu;// game starts at main menu
+	level_is_loaded = false; // at the game beginning level isn't loaded
+	level_counter = 0;   // game starts from 0 level
 	
 	key_is_pressed = false;
 }
@@ -48,6 +52,11 @@ Game::~Game()
 	delete level;
 	delete camera;
 	delete hero;
+	
+	// if user runs game and then close program at main menu
+	// main menu must be deleted
+	// if user played game, menu is not deleted
+	delete_menu();
 }
 
 void Game::check_window_events()
@@ -66,84 +75,45 @@ void Game::run()
 	while (window->isOpen())
 	{
 		check_window_events();
-
-		check_key_pressing();
+		
 		switch (current_state)
 		{
 		case GameState::main_menu:
 			run_main_menu();
 			break;
 		case GameState::game:
+		    delete_menu();
 			run_game();
 			break;
 		case GameState::death:
 			run_game_over();
 			break;
 		}
-		draw();
-
 	}
 }
-void Game::draw()
-{
-    
-    camera->setCenter(hero->get_position());
-	window->clear();
-	switch (current_state)
-	{
-	case GameState::main_menu:
-		draw_main_menu();
-		break;
-	case GameState::game:
-        window->setView(*camera);
-		draw_game();
-		break;
-	case GameState::death:
-	    window->setView(window->getDefaultView());
-		draw_game_over();
-		break;
-	}
-	window->display();
-}
-void Game::check_key_pressing()
-{
-	switch (current_state)
-	{
-	case GameState::main_menu:
-		check_main_menu_key_pressing();
-		break;
-	case GameState::game:
-		check_game_key_pressing();
-		break;
-	case GameState::death:
-		check_game_over_key_pressing();
-		break;
-	}
-}
-
 void Game::check_main_menu_key_pressing()
 {
+    //start game
     if(Keyboard::isKeyPressed(Keyboard::Space))
     {
         current_state = GameState::game;
-        delete menu;
     }
+    
+    //quit game
     if(Keyboard::isKeyPressed(Keyboard::Escape))
     {
-        delete menu;
         window->close();
     }
-}
-
-void Game::draw_main_menu()
-{
-    menu->draw(window);
 }
 void Game::run_main_menu()
 {
     check_main_menu_key_pressing();
-    draw_main_menu();
+    
+    window->clear();
+    menu->draw(window);
+    window->display();
 }
+
 
 void Game::check_game_key_pressing()
 {
@@ -151,25 +121,23 @@ void Game::check_game_key_pressing()
     
     if(kb::isKeyPressed(kb::A))
     {
-        bool collision = check_object_collides_other_object(hero,Sides::left,level->get_walls());
-        if(!collision) hero->move(hero->Direction::left);
-        hero_direction =  hero->Direction::left;
+        bool collision = check_object_collides_other_object(hero,Direction::left,level->get_walls());
+        if(!collision) hero->move(Direction::left);
     }
     if(kb::isKeyPressed(kb::D))
     {
-        bool collision = check_object_collides_other_object(hero,Sides::right,level->get_walls());
-        if(!collision) hero->move(hero->Direction::right);
-        hero_direction =  hero->Direction::right;
+        bool collision = check_object_collides_other_object(hero,Direction::right,level->get_walls());
+        if(!collision) hero->move(Direction::right);
     }
     if(kb::isKeyPressed(kb::W))
     {
-        bool collision = check_object_collides_other_object(hero,Sides::top,level->get_walls());
-        if(!collision)hero->move(hero->Direction::up);
+        bool collision = check_object_collides_other_object(hero,Direction::up,level->get_walls());
+        if(!collision)hero->move(Direction::up);
     }
     if(kb::isKeyPressed(kb::S))
     {
-        bool collision = check_object_collides_other_object(hero,Sides::bottom,level->get_walls());
-        if(!collision) hero->move(hero->Direction::down);
+        bool collision = check_object_collides_other_object(hero,Direction::down,level->get_walls());
+        if(!collision) hero->move(Direction::down);
     }
     if(kb::isKeyPressed(kb::Num1))
     {
@@ -193,85 +161,108 @@ void Game::check_game_key_pressing()
         key_is_pressed = false;
     }
     
-    hero->animate(hero_direction);
+    hero->animate();
 }
 void Game::draw_game()
 {
+    // camera always stays at the center
+    camera->setCenter(hero->get_position());
+    
     level->draw(window);
     window->draw(hero->returnSprite());
     draw_bullets();
     
+    //panel doesn't move, cos it must has static position
     window->setView(window->getDefaultView());
     parameters_panel->draw(window);
 }
 void Game::run_game()
 {
     load_level();
+    
+    check_game_key_pressing();
     check_hero_takes_gun();
     check_bullets_collided_walls();
     check_hero_died();
     
-    draw_game();
+    /// update count of hero's ammo and health counter
     parameters_panel->update(hero->get_ammo(),hero->get_health());
+    
+    window->setView(*camera);
+    window->clear();
+    draw_game();
+    window->display();
+    
 }
+
+void Game::run_game_over()
+{
+    
+    check_game_over_key_pressing();
+    
+    /// there is nothing hard, it only shows that hero died
+    window->setView(window->getDefaultView());
+    game_over->draw(window);
+}
+
+void Game::check_game_over_key_pressing()
+{
+    /// when hero presses space game starts again
+    /// 
+    if(Keyboard::isKeyPressed(Keyboard::Space))
+    {
+        current_state = GameState::game;
+        hero->set_health(5);
+    }
+}
+
+
+void Game::draw_bullets()
+{
+    for(size_t bullet = 0; bullet<hero_bullets.size();++bullet)
+    {
+        hero_bullets[bullet]->move();
+        window->draw(hero_bullets[bullet]->returnSprite());
+    }
+}
+
 void Game::load_level()
 {
+    /// load level if it isn't loaded already
+    
     if(!level_is_loaded)
     {
         level->load("levels/"+to_string(level_counter)+".json");
         level_is_loaded = true;
     }
 }
-bool Game::check_object_collides_other_object(GameObject* object, int side,vector<GameObject*>& objects)
+
+
+bool Game::check_object_collides_other_object(GameObject* object, int direction,vector<GameObject*>& objects)
 {
-   CollisionCounter counter = collision_checker.count_object_collisions(hero,objects);
+   CollisionCounter counter = collision_checker.count_object_collisions(object,objects);
    
-   switch(side)
+   switch(direction)
    {
-   case Sides::left:
-    if(counter.left_side_collisions>0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-    break;
-   case Sides::right:
-    if(counter.right_side_collisions>0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-    break; 
-   case Sides::top:
-    if(counter.top_side_collisions>0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-    break;
-   case Sides::bottom:
-    if(counter.bottom_side_collisions>0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-    break;
+   case Direction::left:
+       return counter.left_side_collisions>0;
+       break;
+   case Direction::right:
+       return counter.right_side_collisions>0;
+       break; 
+   case Direction::up:
+       return counter.top_side_collisions>0;
+       break;
+   case Direction::down:
+       return counter.bottom_side_collisions>0;
+       break;
    }
 }
 bool Game::check_hero_takes_gun()
 {
+    ///when hero takes gun his ammo increases
+    ///and then gun must be deleted
+    
     vector<GameObject*> guns = level->get_usable_objects();
     
     for(size_t i = 0; i<guns.size();++i)
@@ -293,17 +284,10 @@ bool Game::check_hero_takes_gun()
         }
     }
 }
-void Game::draw_bullets()
-{
-    for(size_t bullet = 0; bullet<hero_bullets.size();++bullet)
-    {
-        hero_bullets[bullet]->move();
-        window->draw(hero_bullets[bullet]->returnSprite());
-    }
-}
-
 void Game::check_bullets_collided_walls()
 {
+    /// destroy bullet, if it collides wall
+    
     vector<GameObject*> walls = level->get_walls();
     for(size_t wall = 0; wall<walls.size();++wall)
     {
@@ -319,6 +303,9 @@ void Game::check_bullets_collided_walls()
 }
 void Game::check_hero_died()
 {
+    /// when hero dies, state of program switches to death state
+    /// then game over screen is shown
+    
     if(hero->get_health() <= 0)
     {
         current_state = GameState::death;
@@ -329,27 +316,24 @@ void Game::check_hero_died()
         level->clear();
     }
 }
-void Game::run_game_over()
+
+
+
+void Game::check_hero_teleports_to_next_level()
 {
-    draw_game_over();
-}
-void Game::draw_game_over()
-{
-    game_over->draw(window);
-}
-void Game::check_game_over_key_pressing()
-{
-    if(Keyboard::isKeyPressed(Keyboard::Space))
-    {
-        current_state = GameState::game;
-        hero->set_health(5);
-    }
+    
 }
 
 
-
-
-
+void Game::delete_menu()
+{
+   if(!menu_is_deleted)
+   {
+       delete menu;
+       menu_is_deleted = true;
+   }
+    
+}
 
 
 
