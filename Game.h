@@ -8,6 +8,8 @@
 #include"Physics/Direction.h"
 #include"Bullet.h"
 #include<iostream>
+#include<time.h>
+
 //class runs whole game
 class Game
 {

@@ -25,23 +25,23 @@ void Player::move(int direction)
     switch(direction)
     {
     case Direction::left:
-        gobject_spr.move(-0.5f,0.0f);
+        gobject_spr.move(-8.5f,0.0f);
         shooting_direction = Bullet::Direction::left;
         moving_direction = Direction::left;
         animation_direction = moving_direction;
         break;
     case Direction::right:
-        gobject_spr.move(0.5f,0.0f);
+        gobject_spr.move(8.5f,0.0f);
         shooting_direction = Bullet::Direction::right;
         moving_direction = Direction::right;
         animation_direction = moving_direction;
         break;
     case Direction::up:
-        gobject_spr.move(0.0f,-0.5f);
+        gobject_spr.move(0.0f,-8.5f);
         moving_direction = Direction::up;
         break;
     case Direction::down:
-        gobject_spr.move(0.0f,0.5f);
+        gobject_spr.move(0.0f,8.5f);
         moving_direction = Direction::down;
         break;
     }
@@ -178,7 +178,7 @@ void Player::shoot_pistol(vector<Bullet*>& hero_bullets,
 {
     Bullet* bullet;
     
-    psettings.speed = Vector2f(0.6f,0.0f);
+    psettings.speed = Vector2f(10.6f,0.0f);
     grsettings.image = "images/pistol_bullet.png";
     int damage = 1;
         
@@ -195,7 +195,7 @@ void Player::shoot_cumgun(vector<Bullet*>& hero_bullets,
 {
     Bullet* bullet;
     
-    psettings.speed = Vector2f(0.8f,0.0f);
+    psettings.speed = Vector2f(15.8f,0.0f);
     grsettings.image = "images/cumgun_bullet.png";
     int damage = 2;
     
@@ -213,23 +213,23 @@ void Player::shoot_brutgun(vector<Bullet*>& hero_bullets,
     Bullet* bullet2;
     Bullet* bullet3;
     
-    int damage = 3;
+    int damage = 2;
     grsettings.image = "images/brutgun_bullet.png";
     
     // first bullet flies forward
-    psettings.speed = Vector2f(0.7f,0.0f);
+    psettings.speed = Vector2f(11.7f,0.0f);
     bullet1 = new Bullet(grsettings,psettings,gsettings,damage);
     bullet1->set_direction(shooting_direction);
     hero_bullets.push_back(bullet1);
     
     //second bullet flies down
-    psettings.speed = Vector2f(0.3f,0.2f);
+    psettings.speed = Vector2f(11.3f,9.2f);
     bullet2 = new Bullet(grsettings,psettings,gsettings,damage);
     bullet2->set_direction(shooting_direction);
     hero_bullets.push_back(bullet2);
     
     //third bullet flies up
-    psettings.speed = Vector2f(0.3f,-0.2f);
+    psettings.speed = Vector2f(11.3f,-9.2f);
     bullet3 = new Bullet(grsettings,psettings,gsettings,damage);
     bullet3->set_direction(shooting_direction);
     hero_bullets.push_back(bullet3);

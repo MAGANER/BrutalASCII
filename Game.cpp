@@ -3,6 +3,9 @@
 Game::Game()
 {
 	window = new RenderWindow(VideoMode(720, 640), "BrutalDeath");
+	window->setFramerateLimit(60); // to optimize CPU
+	window->setVerticalSyncEnabled(true);
+	
 	menu = new MainMenu();
 	game_over = new GameOverMenu();
 	parameters_panel = new Parameters();
@@ -75,7 +78,6 @@ void Game::run()
 	while (window->isOpen())
 	{
 		check_window_events();
-		
 		switch (current_state)
 		{
 		case GameState::main_menu:
