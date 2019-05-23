@@ -551,14 +551,14 @@ bool CollisionChecker::bottom_side_collision(PhysicalObject * objectA, PhysicalO
     float objectB_right_side  = objectB->get_left_vertex().x + objectB->get_width();
 
     bool first_condition   =  objectA_bottom_side > objectB_top_side;
-    bool second_condition =  objectA_bottom_side < objectB_top_side+3;
+    bool second_condition =  objectA_bottom_side < objectB_top_side+50;
     bool third_condition  =  are_object_near_with_x(objectA,objectB) ||
                              does_x1_equals_x2(objectA,objectB);
 
     // if objectA doesn't stand on ObjectB,than he collides its right/left side
     // and so objectA "touches" objectB and so collision is true
     bool fourth_condition =  (int)objectA_right_side != (int)objectB_left_side;
-    bool fifth_condition  =  (int)objectA_left_side+1  != (int)objectB_right_side;
+    bool fifth_condition  =  (int)objectA_left_side+50  != (int)objectB_right_side;
 
 
 
@@ -590,14 +590,14 @@ bool CollisionChecker::bottom_side_collision(PhysicalSettings objectA_settings,P
     float objectB_right_side  = objectB_settings.main_vertex.x + objectB_settings.width;
 
     bool first_condition   =  objectA_bottom_side > objectB_top_side;
-    bool second_condition =  objectA_bottom_side < objectB_top_side+3;
+    bool second_condition =  objectA_bottom_side < objectB_top_side+50;
     bool third_condition  =  are_object_near_with_x(objectA_settings,objectB_settings) ||
                              does_x1_equals_x2(objectA_settings,objectB_settings);
 
     // if objectA doesn't stand on ObjectB,than he collides its right/left side
     // and so objectA "touches" objectB and so collision is true
     bool fourth_condition =  (int)objectA_right_side != (int)objectB_left_side;
-    bool fifth_condition  =  (int)objectA_left_side+1  != (int)objectB_right_side;
+    bool fifth_condition  =  (int)objectA_left_side+50  != (int)objectB_right_side;
 
 
 
@@ -631,7 +631,7 @@ bool CollisionChecker::top_side_collision(PhysicalObject * objectA, PhysicalObje
     float objectB_right_side  = objectB->get_left_vertex().x + objectB->get_width();
 
     bool first_condition   = objectA_top_side < objectB_bottom_side;
-    bool second_condition  = objectA_top_side > objectB_bottom_side-3;
+    bool second_condition  = objectA_top_side > objectB_bottom_side-15;
     bool third_condition   = are_object_near_with_x(objectA,objectB) ||
                              does_x1_equals_x2(objectA,objectB);
 
@@ -671,7 +671,7 @@ bool CollisionChecker::top_side_collision(PhysicalSettings objectA_settings,Phys
     float objectB_right_side  = objectB_settings.main_vertex.x + objectB_settings.width;
 
     bool first_condition   = objectA_top_side < objectB_bottom_side;
-    bool second_condition  = objectA_top_side > objectB_bottom_side-3;
+    bool second_condition  = objectA_top_side > objectB_bottom_side-15;
     bool third_condition   = are_object_near_with_x(objectA_settings,objectB_settings) ||
                              does_x1_equals_x2(objectA_settings,objectB_settings);
 
