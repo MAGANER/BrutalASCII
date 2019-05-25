@@ -30,7 +30,7 @@ Parameters::~Parameters()
     delete cumgun_ammo;
     delete brutgun_ammo;
     delete doublegun_ammo;
-    delete madgun_ammo;    doublegun_ammo->setString("doublegun ammo:"+to_string(ammo.doublegun));
+    delete madgun_ammo;    
 }
 
 void Parameters::draw(RenderWindow* window)
