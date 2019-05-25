@@ -11,7 +11,7 @@
 */
 class Bullet : public GameObject
 {
-private:
+protected:
     int damage;
     int direction;
 public:
@@ -25,11 +25,11 @@ public:
            PhysicalSettings phys_settings,
            GameSettings game_settings,
            int damage);
-    ~Bullet();
+    virtual ~Bullet();
     
     void set_direction(int new_direction);
     int get_damage();
-    void move();
+    virtual void move();
 };
 
 #endif // BULLET_H
