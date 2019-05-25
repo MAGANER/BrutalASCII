@@ -38,6 +38,15 @@ void myLevel::draw(RenderWindow* window)
         ++trigger;
     }
     
+    //draw thorns
+    auto thorn = thorns.begin();
+    while(thorn != thorns.end())
+    {
+        bool is_drawable = (*thorn)->is_drawable();
+        if(is_drawable)window->draw((*thorn)->returnSprite());
+        ++thorn;
+    }
+    
 }
 void myLevel::sort_objects()
 {
@@ -49,12 +58,18 @@ void myLevel::sort_objects()
         string type = (*object)->get_type();
         
         bool is_wall = type == "wall";
+        
         bool is_gun = type == "pistol" ||
                       type == "cumgun" || 
                       type == "brutgun"||
                       type == "madgun" ||
                       type == "doublegun";
-        bool is_trigger = type == "start" || type == "level_portal";
+                      
+        bool is_trigger = type == "start" || 
+                          type == "level_portal";
+                          
+        bool is_thorn = type == "thorn";
+                          
         
         if(is_wall)
         {
@@ -67,6 +82,10 @@ void myLevel::sort_objects()
         else if(is_trigger)
         {
             triggers.push_back(*object);
+        }
+        else if(is_thorn)
+        {
+            thorns.push_back(*object);
         }
         ++object;
     }
@@ -87,11 +106,21 @@ vector<GameObject*>& myLevel::get_usable_objects()
 {
     return usable_objects;
 }
+vector<GameObject*>& myLevel::get_triggers()
+{
+    return triggers;
+}
+vector<GameObject*>& myLevel::get_thorns()
+{
+    return thorns;
+}
+
 void myLevel::clear()
 {
     walls.clear();
     usable_objects.clear();
     triggers.clear();
+    thorns.clear();
 }
 Vector2f myLevel::get_hero_start()
 {

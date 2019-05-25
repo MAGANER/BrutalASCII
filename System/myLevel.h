@@ -15,6 +15,7 @@ private:
     vector<GameObject*> walls;
     vector<GameObject*> usable_objects;//gun, ammo e.t.c
     vector<GameObject*> triggers;
+    vector<GameObject*> thorns;
     
     void sort_objects(); // loaded from file
 public:
@@ -23,6 +24,9 @@ public:
     
     vector<GameObject*>& get_walls();
     vector<GameObject*>& get_usable_objects();
+    vector<GameObject*>& get_triggers();
+    vector<GameObject*>& get_thorns();
+    
     Vector2f get_hero_start();
     GameObject* get_trigger(string type);//this trigger is one at current level
     

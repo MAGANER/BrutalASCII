@@ -365,7 +365,14 @@ int Player::get_direction()
 {
     return moving_direction;
 }
-
+void Player::destroy_ammo()
+{
+    ammo.brutgun*=0;
+    ammo.cumgun*=0;
+    ammo.doublegun*=0;
+    ammo.madgun*=0;
+    ammo.pistol*=0;
+}
 
 
 

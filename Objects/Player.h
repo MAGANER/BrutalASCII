@@ -46,6 +46,7 @@ public:
 
     bool has_any_ammo();    
     void set_ammo(int ammo,string type);
+    void destroy_ammo(); // when hero dies
     Ammo get_ammo();
     void choose_new_gun(int gun_number);
         

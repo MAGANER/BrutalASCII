@@ -61,6 +61,7 @@ private:
 	
 	bool check_object_collides_other_object(GameObject* object, int direction,vector<GameObject*>& objects);
 	void check_bullets_collided_walls();
+	void check_hero_collided_thorns();
 	void check_hero_teleports_to_next_level();
 	bool check_hero_takes_gun();
     void check_hero_died();

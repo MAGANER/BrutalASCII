@@ -91,6 +91,8 @@ void Game::run()
 			run_game_over();
 			break;
 		}
+		
+		cout<<"dead"<<hero->get_position().x<<endl;
 	}
 }
 void Game::check_main_menu_key_pressing()
@@ -125,6 +127,8 @@ void Game::check_game_key_pressing()
     {
         bool collision = check_object_collides_other_object(hero,Direction::left,level->get_walls());
         if(!collision) hero->move(Direction::left);
+        
+        
     }
     if(kb::isKeyPressed(kb::D))
     {
@@ -195,6 +199,7 @@ void Game::run_game()
     check_bullets_collided_walls();
     check_hero_died();
     check_hero_teleports_to_next_level();
+    check_hero_collided_thorns();
     
     /// update count of hero's ammo and health counter
     parameters_panel->update(hero->get_ammo(),hero->get_health());
@@ -208,22 +213,27 @@ void Game::run_game()
 
 void Game::run_game_over()
 {
-    
     check_game_over_key_pressing();
     
     /// there is nothing hard, it only shows that hero died
+    window->clear();
     window->setView(window->getDefaultView());
     game_over->draw(window);
+    window->display();
 }
 
 void Game::check_game_over_key_pressing()
 {
     /// when hero presses space game starts again
-    /// 
     if(Keyboard::isKeyPressed(Keyboard::Space))
     {
         current_state = GameState::game;
         hero->set_health(5);
+        
+        //when hero ressurects he dies(WTF)
+        //but when he moves, he lives
+        //VOODOO
+        hero->move(Direction::right);
     }
 }
 
@@ -330,6 +340,8 @@ void Game::check_hero_died()
         // so clear level and reload it
         level_is_loaded = false;
         level->clear();
+        
+        hero->destroy_ammo(); // cos when hero dies he must lost all of his ammo
     }
 }
 
@@ -347,6 +359,25 @@ void Game::check_hero_teleports_to_next_level()
         level_counter++;
         level_is_loaded = false;
     }
+}
+void Game::check_hero_collided_thorns()
+{
+    //if hero collides thorns, than it kills him
+    
+    vector<GameObject*> thorns = level->get_thorns();
+    
+    auto trigger = thorns.begin();
+    while(trigger != thorns.end())
+    {
+        if(collision_checker.object_collides(hero,*trigger))
+        {
+            cout<<(*trigger)->get_type()<<endl;
+            hero->set_health(hero->get_health()-1);
+        }
+        
+        ++trigger;
+    }
+    
 }
 
 
