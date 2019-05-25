@@ -8,45 +8,30 @@ myLevel::~myLevel()
 {
 }
 
-
-void myLevel::draw(RenderWindow* window)
+void myLevel::draw(vector<GameObject*>objects, RenderWindow* window)
 {
-    /// draw whole level
-    
-    //draw walls
-    auto wall = walls.begin();
-    while(wall != walls.end())
+    auto object = objects.begin();
+    while(object != objects.end())
     {
-        window->draw((*wall)->returnSprite());
-        ++wall;
+        bool is_drawable = (*object)->is_drawable();
+        if(is_drawable) window->draw((*object)->returnSprite());
+        ++object;
     }
+}
+void myLevel::draw_level(RenderWindow* window)
+{
+    draw(walls,window);
+    draw(usable_objects,window);
+    draw(triggers,window);
+    draw(thorns,window);
     
-    //draw usable objects
-    auto usable_object = usable_objects.begin();
-    while(usable_object != usable_objects.end())
+    auto lever = levers.begin();
+    while(lever != levers.end())
     {
-        window->draw((*usable_object)->returnSprite());
-        ++usable_object;
+        (*lever)->animate();
+        window->draw((*lever)->returnSprite());
+        ++lever;
     }
-    
-    //draw triggers
-    auto trigger = triggers.begin();
-    while(trigger != triggers.end())
-    {
-        bool is_drawable = (*trigger)->is_drawable();
-        if(is_drawable)window->draw((*trigger)->returnSprite());
-        ++trigger;
-    }
-    
-    //draw thorns
-    auto thorn = thorns.begin();
-    while(thorn != thorns.end())
-    {
-        bool is_drawable = (*thorn)->is_drawable();
-        if(is_drawable)window->draw((*thorn)->returnSprite());
-        ++thorn;
-    }
-    
 }
 void myLevel::sort_objects()
 {
@@ -67,8 +52,10 @@ void myLevel::sort_objects()
                       
         bool is_trigger = type == "start" || 
                           type == "level_portal";
-                          
+        
         bool is_thorn = type == "thorn";
+        
+        bool is_lever = type =="lever";
                           
         
         if(is_wall)
@@ -87,6 +74,15 @@ void myLevel::sort_objects()
         {
             thorns.push_back(*object);
         }
+        else if(is_lever)
+        {
+            GraphicalSettings graph_settings = (*object)->get_graphical_settings();
+            PhysicalSettings phys_settings = (*object)->get_phys_settings();
+            GameSettings game_settings = (*object)->get_game_settings();
+            Lever* lever = new Lever(graph_settings,phys_settings,game_settings);
+            levers.push_back(lever);
+        }
+        
         ++object;
     }
     
@@ -114,13 +110,17 @@ vector<GameObject*>& myLevel::get_thorns()
 {
     return thorns;
 }
-
+vector<Lever*>& myLevel::get_levers()
+{
+    return levers;
+}
 void myLevel::clear()
 {
     walls.clear();
     usable_objects.clear();
     triggers.clear();
     thorns.clear();
+    levers.clear();
 }
 Vector2f myLevel::get_hero_start()
 {
@@ -148,6 +148,18 @@ GameObject* myLevel::get_trigger(string type)
         ++trigger;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
