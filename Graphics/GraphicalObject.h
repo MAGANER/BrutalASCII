@@ -49,8 +49,13 @@ public:
 	void set_rotation_angle(float angle);
 	float get_rotation_angle();
 
-	void set_position(float x, float y);
-    void set_position(Vector2f position);
+	/*
+	  all those methods are virtual
+	  because they set only GRAPHICAL position,
+	  not physical body's position
+	*/
+	virtual void set_position(float x, float y);
+    virtual void set_position(Vector2f position);
 
     void set_texture_rect(const IntRect& rect);
     IntRect get_texture_rect();

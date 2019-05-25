@@ -23,5 +23,9 @@ public:
 
 	string get_type();
 	int get_id();
+	
+	
+    void set_position(float x, float y);
+    void set_position(Vector2f position);
 };
 
