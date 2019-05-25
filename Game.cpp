@@ -4,7 +4,7 @@ Game::Game()
 {
 	window = new RenderWindow(VideoMode(720, 640), "BrutalDeath");
 	window->setFramerateLimit(60); // to optimize CPU
-	window->setVerticalSyncEnabled(true);
+	//window->setVerticalSyncEnabled(true);
 	
 	menu = new MainMenu();
 	game_over = new GameOverMenu();
@@ -153,6 +153,10 @@ void Game::check_game_key_pressing()
     {
         hero->choose_new_gun(2);
     }
+    if(kb::isKeyPressed(kb::Num4))
+    {
+        hero->choose_new_gun(3);
+    }
     if(kb::isKeyPressed(kb::Space) && !key_is_pressed)
     {
         hero->shoot(hero_bullets);
@@ -276,7 +280,10 @@ bool Game::check_hero_takes_gun()
         // level returns usable objects of ANY kind
         // and there are other objects,except guns
         // so it's needed to check 
-        bool is_gun = type == "pistol" || type == "cumgun" || type == "brutgun";
+        bool is_gun = type == "pistol" || 
+                      type == "cumgun" || 
+                      type == "brutgun"||
+                      type == "doublegun";
         
         bool collision = collision_checker.object_collides(hero,guns[i]);
         if(is_gun && collision)
