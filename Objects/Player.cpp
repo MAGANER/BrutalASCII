@@ -191,7 +191,7 @@ void Player::shoot(vector<Bullet*>& hero_bullets)
     }
     if(current_gun == Guns::madgun && ammo.madgun > 0)
     {
-       // shoot_madgun(hero_bullets,graph_settings,phys_settings,game_settings);
+        shoot_madgun(hero_bullets,graph_settings,phys_settings,game_settings);
         
         // when hero has no ammo, hide his current gun
         if(ammo.madgun == 0)
@@ -308,7 +308,22 @@ void Player::shoot_doublegun(vector<Bullet*>& hero_bullets,
     
     ammo.doublegun-=1;
 }
-
+void Player::shoot_madgun(vector<Bullet*>& hero_bullets,
+                          GraphicalSettings& grsettings, 
+                          PhysicalSettings& psettings, 
+                          GameSettings& gsettings)
+{
+    MadBullet* bullet;
+    
+    grsettings.image = "images/madbullet.png";
+    int damage = 1;//shall be generated,when mad bullet object will be constructed
+    
+    bullet = new MadBullet(grsettings,psettings,gsettings,damage);
+    bullet->set_direction(shooting_direction);
+        
+    hero_bullets.push_back(bullet);
+    ammo.madgun-=1;
+}
 
 void Player::choose_new_gun(int gun_number)
 {
