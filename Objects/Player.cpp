@@ -72,11 +72,19 @@ void Player::set_ammo(int ammo, string type)
     {
         this->ammo.brutgun += ammo;
     }
+    if(type == "madgun")
+    {
+        this->ammo.madgun += ammo;
+    }
+    if(type == "doublegun")
+    {
+        this->ammo.doublegun +=ammo;
+    }
 }
 bool Player::has_any_ammo()
 {
     // checks can hero shoot any gun
-    return ammo.brutgun+ammo.cumgun+ammo.pistol;
+    return ammo.brutgun+ammo.cumgun+ammo.pistol + ammo.doublegun + ammo.madgun;
 }
 void Player::animate()
 {
@@ -92,6 +100,12 @@ void Player::animate()
             break;
         case Guns::brutgun:
             set_image("images/left_char_with_gun2.png");
+            break;
+        case Guns::doublegun:
+            set_image("images/left_char_with_gun5.png");
+            break;
+        case Guns::madgun:
+            set_image("images/left_char_with_gun4.png");
             break;
         default:
             set_image("images/left_char.png");
@@ -110,6 +124,12 @@ void Player::animate()
             break;
         case Guns::brutgun:
             set_image("images/char_with_gun2.png");
+            break;
+        case Guns::doublegun:
+            set_image("images/char_with_gun5.png");
+            break;
+        case Guns::madgun:
+            set_image("images/char_with_gun4.png");
             break;
         default:
             set_image("images/char.png");
@@ -165,6 +185,26 @@ void Player::shoot(vector<Bullet*>& hero_bullets)
         
         // when hero has no ammo, hide his current gun
         if(ammo.brutgun == 0)
+        {
+            current_gun = -1;
+        }
+    }
+    if(current_gun == Guns::madgun && ammo.madgun > 0)
+    {
+       // shoot_madgun(hero_bullets,graph_settings,phys_settings,game_settings);
+        
+        // when hero has no ammo, hide his current gun
+        if(ammo.madgun == 0)
+        {
+            current_gun = -1;
+        }
+    }
+    if(current_gun == Guns::doublegun && ammo.doublegun > 0)
+    {
+        shoot_doublegun(hero_bullets,graph_settings,phys_settings,game_settings);
+        
+        // when hero has no ammo, hide his current gun
+        if(ammo.doublegun == 0)
         {
             current_gun = -1;
         }
@@ -236,6 +276,39 @@ void Player::shoot_brutgun(vector<Bullet*>& hero_bullets,
     
     ammo.brutgun-=1;
 }
+void Player::shoot_doublegun(vector<Bullet*>& hero_bullets,
+                             GraphicalSettings& grsettings,
+                             PhysicalSettings& psettings,
+                             GameSettings& gsettings)
+{
+    Bullet* left_bullet;
+    Bullet* right_bullet;
+    
+    psettings.speed = Vector2f(12.0f,0.0f);
+    grsettings.image = "images/doublegunbullet.png";
+    int damage = 2;
+    
+    right_bullet = new Bullet(grsettings,psettings,gsettings,damage);
+    right_bullet->set_direction(Bullet::Direction::right);
+    hero_bullets.push_back(right_bullet);
+    
+    
+    psettings.speed = Vector2f(-12.0f,0.0f);
+    
+    Vector2f hero_position = get_position();
+    Vector2f old_bullet_position = right_bullet->get_position();
+    grsettings.position = Vector2f(hero_position.x -4,old_bullet_position.y);
+    psettings.main_vertex = grsettings.position;
+    
+    grsettings.image = "image/doublegunbullet.png";
+    
+    left_bullet = new Bullet(grsettings,psettings,gsettings,damage);
+    left_bullet->set_direction(Bullet::Direction::right);
+    hero_bullets.push_back(left_bullet);
+    
+    ammo.doublegun-=1;
+}
+
 
 void Player::choose_new_gun(int gun_number)
 {
@@ -245,15 +318,28 @@ void Player::choose_new_gun(int gun_number)
         if(ammo.pistol > 0)
             current_gun = Guns::pistol;
         break;
+        
     case Guns::cumgun:
         if(ammo.cumgun > 0)
             current_gun = Guns::cumgun;
         break;
+        
     case Guns::brutgun:
         if(ammo.brutgun > 0)
             current_gun = Guns::brutgun;
         break;
+        
+    case Guns::doublegun:
+        if(ammo.doublegun > 0)
+            current_gun = Guns::doublegun;
+        break;
+        
+    case Guns::madgun:
+        if(ammo.madgun > 0)
+            current_gun = Guns::madgun;
+        break;
     }
+    
     if(!has_any_ammo())
     {
         current_gun = -1;

@@ -11,6 +11,8 @@ struct Ammo
     int pistol;
     int cumgun;
     int brutgun;
+    int doublegun;
+    int madgun;
 };
 class Player : public GameObject
 {
@@ -23,7 +25,9 @@ private:
     {
         pistol,
         cumgun,
-        brutgun
+        brutgun,
+        doublegun,
+        madgun
     };
     int current_gun;
     
@@ -67,6 +71,16 @@ private:
                        GameSettings& gsettings);
                        
     void shoot_cumgun(vector<Bullet*>& hero_bullets,
+                       GraphicalSettings& grsettings,
+                       PhysicalSettings& psettings,
+                       GameSettings& gsettings);
+                       
+    void shoot_doublegun(vector<Bullet*>& hero_bullets,
+                          GraphicalSettings& grsettings,
+                          PhysicalSettings& psettings,
+                          GameSettings& gsettings);
+                          
+    void shoot_madgun(vector<Bullet*>& hero_bullets,
                        GraphicalSettings& grsettings,
                        PhysicalSettings& psettings,
                        GameSettings& gsettings);
