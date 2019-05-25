@@ -17,6 +17,8 @@ private:
     Text* pistol_ammo;
     Text* cumgun_ammo;
     Text* brutgun_ammo;
+    Text* doublegun_ammo;
+    Text* madgun_ammo;
 public:
     Parameters();
     ~Parameters();
