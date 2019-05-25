@@ -14,13 +14,16 @@ GameObject::~GameObject()
 {
 }
 
+GameSettings GameObject::get_game_settings()
+{
+    GameSettings game_settings;
+    game_settings.id = id;
+    game_settings.type = type;
+    return game_settings;
+}
 string GameObject::get_type()
 {
-	return type;
-}
-int GameObject::get_id()
-{
-	return id;
+    return type;
 }
 void GameObject::set_position(Vector2f position)
 {

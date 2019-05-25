@@ -20,10 +20,9 @@ private:
 public:
 	GameObject(GraphicalSettings graph_settings,PhysicalSettings phys_settings, GameSettings game_settings);
     virtual ~GameObject();
-
-	string get_type();
-	int get_id();
-	
+    
+    string get_type();
+	GameSettings get_game_settings();
 	
     void set_position(float x, float y);
     void set_position(Vector2f position);
