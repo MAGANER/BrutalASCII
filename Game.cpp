@@ -157,6 +157,10 @@ void Game::check_game_key_pressing()
     {
         hero->choose_new_gun(3);
     }
+        if(kb::isKeyPressed(kb::Num5))
+    {
+        hero->choose_new_gun(4);
+    }
     if(kb::isKeyPressed(kb::Space) && !key_is_pressed)
     {
         hero->shoot(hero_bullets);
@@ -283,7 +287,8 @@ bool Game::check_hero_takes_gun()
         bool is_gun = type == "pistol" || 
                       type == "cumgun" || 
                       type == "brutgun"||
-                      type == "doublegun";
+                      type == "doublegun" ||
+                      type == "madgun";
         
         bool collision = collision_checker.object_collides(hero,guns[i]);
         if(is_gun && collision)
