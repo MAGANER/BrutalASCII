@@ -46,6 +46,9 @@ Game::Game()
 	level_counter = 0;   // game starts from 0 level
 	
 	key_is_pressed = false;
+	
+	lever_counter = 0; //hero must activate 3 to activate portal 
+                       //and then teleport to next level
 }
 Game::~Game()
 {
@@ -181,7 +184,7 @@ void Game::draw_game()
     // camera always stays at the center
     camera->setCenter(hero->get_position());
     
-    level->draw(window);
+    level->draw_level(window);
     window->draw(hero->returnSprite());
     draw_bullets();
     
@@ -199,6 +202,7 @@ void Game::run_game()
     check_hero_died();
     check_hero_teleports_to_next_level();
     check_hero_collided_thorns();
+    check_hero_activated_lever();
     
     
     /// update count of hero's ammo and health counter
@@ -335,6 +339,7 @@ void Game::check_hero_died()
         // so clear level and reload it
         level_is_loaded = false;
         level->clear();
+        lever_counter = 0;
         
         hero->destroy_ammo(); // cos when hero dies he must lost all of his ammo
     }
@@ -348,11 +353,12 @@ void Game::check_hero_teleports_to_next_level()
     CollisionCounter counter = collision_checker.count_object_collisions(hero,portal);
     int collision = counter.get_collisions_summ();
     
-    if(collision > 0)
+    if(collision > 0 && lever_counter == 3)
     {
         level->clear();
         level_counter++;
         level_is_loaded = false;
+        lever_counter = 0;
     }
 }
 void Game::check_hero_collided_thorns()
@@ -375,7 +381,25 @@ void Game::check_hero_collided_thorns()
     }
     
 }
-
+void Game::check_hero_activated_lever()
+{
+    vector<Lever*> levers = level->get_levers();
+    auto lever = levers.begin();
+    while(lever != levers.end())
+    {
+        GameObject* converted_lever = static_cast<GameObject*>(*lever);
+        
+        bool collision = collision_checker.object_collides(hero,converted_lever);
+        bool lever_is_activated = (*lever)->is_activated();
+        if(collision && !lever_is_activated)
+        {
+            lever_counter++;
+            (*lever)->set_activated_state(true);
+            break;
+        }
+        ++lever;
+    }
+}
 
 void Game::delete_menu()
 {

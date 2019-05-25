@@ -19,6 +19,7 @@ private:
     myLevel* level;
     bool level_is_loaded;
 	int level_counter;
+	int lever_counter; // counts activated levers
     
     ///menu///
     MainMenu* menu;
@@ -63,6 +64,7 @@ private:
 	void check_bullets_collided_walls();
 	void check_hero_collided_thorns();
 	void check_hero_teleports_to_next_level();
+	void check_hero_activated_lever();
 	bool check_hero_takes_gun();
     void check_hero_died();
 	
