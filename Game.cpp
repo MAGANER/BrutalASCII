@@ -92,7 +92,6 @@ void Game::run()
 			break;
 		}
 		
-		cout<<"dead"<<hero->get_position().x<<endl;
 	}
 }
 void Game::check_main_menu_key_pressing()
@@ -201,6 +200,7 @@ void Game::run_game()
     check_hero_teleports_to_next_level();
     check_hero_collided_thorns();
     
+    
     /// update count of hero's ammo and health counter
     parameters_panel->update(hero->get_ammo(),hero->get_health());
     
@@ -228,12 +228,7 @@ void Game::check_game_over_key_pressing()
     if(Keyboard::isKeyPressed(Keyboard::Space))
     {
         current_state = GameState::game;
-        hero->set_health(5);
-        
-        //when hero ressurects he dies(WTF)
-        //but when he moves, he lives
-        //VOODOO
-        hero->move(Direction::right);
+        hero->set_health(10);
     }
 }
 
@@ -332,7 +327,7 @@ void Game::check_hero_died()
     /// when hero dies, state of program switches to death state
     /// then game over screen is shown
     
-    if(hero->get_health() <= 0)
+    if(hero->get_health() < 0)
     {
         current_state = GameState::death;
         
@@ -373,6 +368,7 @@ void Game::check_hero_collided_thorns()
         {
             cout<<(*trigger)->get_type()<<endl;
             hero->set_health(hero->get_health()-1);
+            break;
         }
         
         ++trigger;
@@ -390,6 +386,5 @@ void Game::delete_menu()
    }
     
 }
-
 
 
