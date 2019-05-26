@@ -32,6 +32,13 @@ void myLevel::draw_level(RenderWindow* window)
         window->draw((*lever)->returnSprite());
         ++lever;
     }
+    
+    auto turrel = turrels.begin();
+    while(turrel != turrels.end())
+    {
+        window->draw((*turrel)->returnSprite());
+        ++turrel;
+    }
 }
 void myLevel::sort_objects()
 {
@@ -56,8 +63,11 @@ void myLevel::sort_objects()
         bool is_thorn = type == "thorn";
         
         bool is_lever = type =="lever";
-                          
         
+        bool is_turrel = type == "lturrell" ||
+                         type == "rturrell" ||
+                         type == "uturrell" ||
+                         type == "dturrell";
         if(is_wall)
         {
             walls.push_back(*object);
@@ -74,14 +84,25 @@ void myLevel::sort_objects()
         {
             thorns.push_back(*object);
         }
-        else if(is_lever)
+        else if(is_lever || is_turrel)
         {
             GraphicalSettings graph_settings = (*object)->get_graphical_settings();
             PhysicalSettings phys_settings = (*object)->get_phys_settings();
             GameSettings game_settings = (*object)->get_game_settings();
-            Lever* lever = new Lever(graph_settings,phys_settings,game_settings);
-            levers.push_back(lever);
+            if(is_lever)
+            {
+                 Lever* lever = new Lever(graph_settings,phys_settings,game_settings);
+                 levers.push_back(lever);
+            }
+            if(is_turrel)
+            {
+                int direction = get_turrell_direction(type);
+                Turrell* turrell = new  Turrell(graph_settings,phys_settings,game_settings,direction);
+                turrels.push_back(turrell);
+            }
+
         }
+        
         
         ++object;
     }
@@ -114,6 +135,30 @@ vector<Lever*>& myLevel::get_levers()
 {
     return levers;
 }
+vector<Turrell*>& myLevel::get_turrels()
+{
+    return turrels;
+}
+int myLevel::get_turrell_direction(string type)
+{
+    if(type == "lturrell")
+    {
+        return Direction::left;
+    }
+    if(type == "rturrell")
+    {
+        return Direction::right;
+    }
+    if(type == "uturrell")
+    {
+        return Direction::up;
+    }
+    if(type == "dturrell")
+    {
+        return Direction::down;
+    }
+}
+
 void myLevel::clear()
 {
     walls.clear();
@@ -148,8 +193,6 @@ GameObject* myLevel::get_trigger(string type)
         ++trigger;
     }
 }
-
-
 
 
 

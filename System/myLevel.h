@@ -4,6 +4,8 @@
 #include <Level.h>
 #include"Player.h"
 #include"Lever.h"
+#include"Turrell.h"
+#include"Physics/Direction.h"
 
 /*
  when all data is loaded to objects vector
@@ -19,6 +21,9 @@ private:
     vector<GameObject*> thorns;
     vector<Lever*> levers;
     
+    vector<Turrell*> turrels;
+    int get_turrell_direction(string type);
+    
     void sort_objects(); // loaded from file
     
     void draw(vector<GameObject*> objects, RenderWindow* window);
@@ -31,6 +36,7 @@ public:
     vector<GameObject*>& get_triggers();
     vector<GameObject*>& get_thorns();
     vector<Lever*>& get_levers();
+    vector<Turrell*>& get_turrels();
     
     Vector2f get_hero_start();
     GameObject* get_trigger(string type);//this trigger is one at current level
