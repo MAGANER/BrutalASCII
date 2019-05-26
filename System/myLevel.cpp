@@ -49,7 +49,7 @@ void myLevel::sort_objects()
     {
         string type = (*object)->get_type();
         
-        bool is_wall = type == "wall";
+        bool is_wall = type == "wall" || type == "twall";
         
         bool is_gun = type == "pistol" ||
                       type == "cumgun" || 

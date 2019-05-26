@@ -327,9 +327,34 @@ void Game::check_bullets_collided_walls(vector<Bullet*>& bullets)
         for(size_t bullet = 0; bullet<bullets.size();++bullet)
         {
             bool collision = collision_checker.object_collides(bullets[bullet],walls[wall]);
-            if(collision)
+            if(collision && walls[wall]->get_type() == "wall")
             {
                 bullets.erase(bullets.begin()+bullet);
+            }
+            else if(collision && walls[wall]->get_type() == "twall") // bullet's type is twall
+            {
+                //bullet changes its direction
+                int direction = bullets[bullet]->get_direction();
+                Vector2f bullet_pos = bullets[bullet]->get_position();
+                switch(direction)
+                {
+                case Direction::left:
+                    bullets[bullet]->set_position(bullet_pos.x + 30.0f,bullet_pos.y);
+                    bullets[bullet]->set_direction(Direction::right);
+                    break;
+                case Direction::right:
+                    bullets[bullet]->set_position(bullet_pos.x - 30.0f,bullet_pos.y);
+                    bullets[bullet]->set_direction(Direction::left);
+                    break;
+                case Direction::up:
+                    bullets[bullet]->set_position(bullet_pos.x,bullet_pos.y+30.0f);
+                    bullets[bullet]->set_direction(Direction::down);
+                    break;
+                case Direction::down:
+                    bullets[bullet]->set_position(bullet_pos.x,bullet_pos.y-30.0f);
+                    bullets[bullet]->set_direction(Direction::up);
+                    break;
+                }
             }
         }
     }

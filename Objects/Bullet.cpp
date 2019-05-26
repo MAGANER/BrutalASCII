@@ -44,3 +44,7 @@ void Bullet::set_direction(int new_direction)
 {
     direction = new_direction;
 }
+int Bullet::get_direction()
+{
+    return direction;
+}

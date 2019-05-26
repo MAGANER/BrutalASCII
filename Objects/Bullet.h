@@ -22,6 +22,7 @@ public:
     virtual ~Bullet();
     
     void set_direction(int new_direction);
+    int get_direction();
     int get_damage();
     virtual void move();
 };
