@@ -26,13 +26,13 @@ void Player::move(int direction)
     {
     case Direction::left:
         gobject_spr.move(-8.5f,0.0f);
-        shooting_direction = Bullet::Direction::left;
+        shooting_direction = Direction::left;
         moving_direction = Direction::left;
         animation_direction = moving_direction;
         break;
     case Direction::right:
         gobject_spr.move(8.5f,0.0f);
-        shooting_direction = Bullet::Direction::right;
+        shooting_direction = Direction::right;
         moving_direction = Direction::right;
         animation_direction = moving_direction;
         break;
@@ -143,11 +143,11 @@ void Player::shoot(vector<Bullet*>& hero_bullets)
     graph_settings.drawable = true;
     graph_settings.rotation = 0.0f;
     graph_settings.texture_rect = IntRect(0,0,10,10);
-    if(shooting_direction == Bullet::Direction::right)
+    if(shooting_direction == Direction::right)
     {
         graph_settings.position = Vector2f(get_position().x+74,get_position().y+32);
     }
-    if(shooting_direction == Bullet::Direction::left)
+    if(shooting_direction == Direction::left)
     {
         graph_settings.position = Vector2f(get_position().x-4,get_position().y+32);
     }
@@ -289,7 +289,7 @@ void Player::shoot_doublegun(vector<Bullet*>& hero_bullets,
     int damage = 2;
     
     right_bullet = new Bullet(grsettings,psettings,gsettings,damage);
-    right_bullet->set_direction(Bullet::Direction::right);
+    right_bullet->set_direction(Direction::right);
     hero_bullets.push_back(right_bullet);
     
     
@@ -297,13 +297,13 @@ void Player::shoot_doublegun(vector<Bullet*>& hero_bullets,
     
     Vector2f hero_position = get_position();
     Vector2f old_bullet_position = right_bullet->get_position();
-    grsettings.position = Vector2f(hero_position.x -4,old_bullet_position.y);
+    grsettings.position = Vector2f(hero_position.x -6,old_bullet_position.y);
     psettings.main_vertex = grsettings.position;
     
-    grsettings.image = "image/doublegunbullet.png";
+    grsettings.image = "images/doublegunbullet.png";
     
     left_bullet = new Bullet(grsettings,psettings,gsettings,damage);
-    left_bullet->set_direction(Bullet::Direction::right);
+    left_bullet->set_direction(Direction::right);
     hero_bullets.push_back(left_bullet);
     
     ammo.doublegun-=1;

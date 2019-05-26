@@ -30,6 +30,14 @@ void Bullet::move()
     {
         gobject_spr.move(speed.x,speed.y);
     }
+    if(direction == Direction::down)
+    {
+        gobject_spr.move(speed.x,speed.y);
+    }
+    if(direction == Direction::up)
+    {
+        gobject_spr.move(speed.x,-speed.y);
+    }
    
 }
 void Bullet::set_direction(int new_direction)
