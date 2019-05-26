@@ -36,7 +36,9 @@ private:
 	View* camera;
 	
     CollisionChecker collision_checker;
+    
     vector<Bullet*> hero_bullets;
+    vector<Bullet*> turrells_bullets;
 
 	enum GameState
 	{
@@ -61,15 +63,21 @@ private:
 	void check_game_over_key_pressing();
 	
 	bool check_object_collides_other_object(GameObject* object, int direction,vector<GameObject*>& objects);
-	void check_bullets_collided_walls();
+	
 	void check_hero_collided_thorns();
 	void check_hero_teleports_to_next_level();
 	void check_hero_activated_lever();
+	void check_hero_collided_bullets();
 	bool check_hero_takes_gun();
     void check_hero_died();
+    
+    void make_turrells_shoot();
 	
 	void load_level();
-	void draw_bullets();
+	
+	void draw_bullets(vector<Bullet*>& bullets);
+	void check_bullets_collided_walls(vector<Bullet*>& bullets);// hero's, monsters', turrells'
+	
 
 public:
 	Game();

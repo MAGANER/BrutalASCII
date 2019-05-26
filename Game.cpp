@@ -186,7 +186,9 @@ void Game::draw_game()
     
     level->draw_level(window);
     window->draw(hero->returnSprite());
-    draw_bullets();
+    
+    draw_bullets(hero_bullets);
+    draw_bullets(turrells_bullets);
     
     //panel doesn't move, cos it must has static position
     window->setView(window->getDefaultView());
@@ -198,11 +200,17 @@ void Game::run_game()
     
     check_game_key_pressing();
     check_hero_takes_gun();
-    check_bullets_collided_walls();
     check_hero_died();
     check_hero_teleports_to_next_level();
     check_hero_collided_thorns();
     check_hero_activated_lever();
+    check_hero_collided_bullets();
+    
+    check_bullets_collided_walls(hero_bullets);
+    check_bullets_collided_walls(turrells_bullets);
+    //check_bullets_collided_walls(monsters_bullets);
+    
+    make_turrells_shoot();
     
     
     /// update count of hero's ammo and health counter
@@ -237,12 +245,12 @@ void Game::check_game_over_key_pressing()
 }
 
 
-void Game::draw_bullets()
+void Game::draw_bullets(vector<Bullet*>& bullets)
 {
-    for(size_t bullet = 0; bullet<hero_bullets.size();++bullet)
+    for(size_t bullet = 0; bullet<bullets.size();++bullet)
     {
-        hero_bullets[bullet]->move();
-        window->draw(hero_bullets[bullet]->returnSprite());
+        bullets[bullet]->move();
+        window->draw(bullets[bullet]->returnSprite());
     }
 }
 
@@ -309,19 +317,19 @@ bool Game::check_hero_takes_gun()
         }
     }
 }
-void Game::check_bullets_collided_walls()
+void Game::check_bullets_collided_walls(vector<Bullet*>& bullets)
 {
     /// destroy bullet, if it collides wall
     
     vector<GameObject*> walls = level->get_walls();
     for(size_t wall = 0; wall<walls.size();++wall)
     {
-        for(size_t bullet = 0; bullet<hero_bullets.size();++bullet)
+        for(size_t bullet = 0; bullet<bullets.size();++bullet)
         {
-            bool collision = collision_checker.object_collides(hero_bullets[bullet],walls[wall]);
+            bool collision = collision_checker.object_collides(bullets[bullet],walls[wall]);
             if(collision)
             {
-                hero_bullets.erase(hero_bullets.begin()+bullet);
+                bullets.erase(bullets.begin()+bullet);
             }
         }
     }
@@ -400,6 +408,30 @@ void Game::check_hero_activated_lever()
         ++lever;
     }
 }
+void Game::check_hero_collided_bullets()
+{
+        for(size_t bullet = 0; bullet<turrells_bullets.size();++bullet)
+        {
+            bool collision = collision_checker.object_collides(hero,turrells_bullets[bullet]);
+            if(collision)
+            {
+                turrells_bullets.erase(turrells_bullets.begin()+bullet);
+                
+                hero->set_health(hero->get_health()-1);
+            }
+        }
+        
+        for(size_t bullet = 0; bullet<hero_bullets.size();++bullet)
+        {
+            bool collision = collision_checker.object_collides(hero,hero_bullets[bullet]);
+            if(collision)
+            {
+                hero_bullets.erase(hero_bullets.begin()+bullet);
+                
+                hero->set_health(hero->get_health()-1);
+            }
+        }
+}
 
 void Game::delete_menu()
 {
@@ -409,6 +441,16 @@ void Game::delete_menu()
        menu_is_deleted = true;
    }
     
+}
+void Game::make_turrells_shoot()
+{
+    vector<Turrell*> turrells = level->get_turrels();
+    auto turrell = turrells.begin();
+    while(turrell != turrells.end())
+    {
+        (*turrell)->shoot(turrells_bullets);
+        ++turrell;
+    }
 }
 
 
