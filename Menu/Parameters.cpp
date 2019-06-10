@@ -21,6 +21,9 @@ Parameters::Parameters()
     
     madgun_ammo = new Text("madgun ammo:",font,16);
     madgun_ammo->setPosition(180.0f,40.0f);
+    
+    key_counter = new Text("keys:",font,16);
+    key_counter->setPosition(180.0f,60.0f);
 }
 
 Parameters::~Parameters()
@@ -31,6 +34,7 @@ Parameters::~Parameters()
     delete brutgun_ammo;
     delete doublegun_ammo;
     delete madgun_ammo;    
+    delete key_counter;
 }
 
 void Parameters::draw(RenderWindow* window)
@@ -41,8 +45,9 @@ void Parameters::draw(RenderWindow* window)
     window->draw(*brutgun_ammo);
     window->draw(*doublegun_ammo);
     window->draw(*madgun_ammo);
+    window->draw(*key_counter);
 }
-void Parameters::update(Ammo ammo,int hero_health)
+void Parameters::update(Ammo ammo,int hero_health, int keys)
 {
     health->setString("health:"+to_string(hero_health));
     pistol_ammo->setString("pistol ammo:"+to_string(ammo.pistol));
@@ -50,6 +55,7 @@ void Parameters::update(Ammo ammo,int hero_health)
     brutgun_ammo->setString("brutgun ammo:"+to_string(ammo.brutgun));
     doublegun_ammo->setString("doublegun ammo:"+to_string(ammo.doublegun));
     madgun_ammo->setString("madgun ammo:"+to_string(-ammo.madgun));
+    key_counter->setString("keys:"+to_string(keys));
 }
 
 

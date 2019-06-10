@@ -19,12 +19,13 @@ private:
     Text* brutgun_ammo;
     Text* doublegun_ammo;
     Text* madgun_ammo;
+    Text* key_counter;
 public:
     Parameters();
     ~Parameters();
     
     void draw(RenderWindow* window);
-    void update(Ammo ammo,int hero_health);
+    void update(Ammo ammo,int hero_health, int keys);
 
 };
 
