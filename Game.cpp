@@ -468,9 +468,11 @@ void Game::check_hero_takes_key()
     for(size_t i = 0;i<usable_objects.size();++i)
     {
         string type = usable_objects[i]->get_type();
-        if(type == "key")
+        
+        bool collision = collision_checker.object_collides(hero,usable_objects[i]);
+        if(type == "key" && collision)
         {
-            usable_objects.erase(usable_objects.begin() + i);
+            level->get_usable_objects().erase(level->get_usable_objects().begin() + i);
             hero->set_keys(hero->get_keys()+1);
         }
     }
