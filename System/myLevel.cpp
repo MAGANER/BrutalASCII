@@ -59,7 +59,8 @@ void myLevel::sort_objects()
                       type == "key";
                       
         bool is_trigger = type == "start" || 
-                          type == "level_portal";
+                          type == "level_portal" ||
+                          type == "door";
         
         bool is_thorn = type == "thorn";
         
