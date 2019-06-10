@@ -208,6 +208,7 @@ void Game::run_game()
     check_hero_activated_lever();
     check_hero_collided_bullets();
     check_hero_takes_key();
+    check_hero_opens_door();
     
     check_bullets_collided_walls(hero_bullets);
     check_bullets_collided_walls(turrells_bullets);
@@ -474,6 +475,24 @@ void Game::check_hero_takes_key()
         {
             level->get_usable_objects().erase(level->get_usable_objects().begin() + i);
             hero->set_keys(hero->get_keys()+1);
+        }
+    }
+}
+void Game::check_hero_opens_door()
+{
+    vector<GameObject*> walls = level->get_triggers();
+    for(size_t i = 0;i<walls.size();++i)
+    {
+        string type = walls[i]->get_type();
+        if(type == "door")
+        {
+            bool collision = collision_checker.object_collides(hero,walls[i]);
+            bool has_hero_got_enough_keys = hero->get_keys() > 0;
+            if(has_hero_got_enough_keys && collision)
+            {
+                hero->set_keys(hero->get_keys()-1);
+                level->get_triggers().erase(level->get_triggers().begin()+i);
+            }
         }
     }
 }
