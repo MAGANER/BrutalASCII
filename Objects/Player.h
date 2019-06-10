@@ -36,6 +36,7 @@ private:
     int animation_direction; // left of right
     
     bool key_is_pressed;
+    int keys;
 public:
     Player(GraphicalSettings graph_settings,PhysicalSettings phys_settings, GameSettings game_settings);
     ~Player();
@@ -53,8 +54,10 @@ public:
     void set_health(int health);
     int get_health();
     
-    void animate();
+    void set_keys(int number);
+    int get_keys();
     
+    void animate();
 
     
     void check_key_pressing(vector<Bullet*>& hero_bullets);

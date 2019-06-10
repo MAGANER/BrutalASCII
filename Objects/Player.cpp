@@ -11,6 +11,7 @@ Player::Player(GraphicalSettings graph_settings,
     current_gun = -1;
     
     key_is_pressed = false;
+    keys = 0;
     
 }
 
@@ -374,6 +375,14 @@ void Player::destroy_ammo()
     ammo.pistol*=0;
 }
 
+void Player::set_keys(int number)
+{
+    keys = number;
+}
+int Player::get_keys()
+{
+    return keys;
+}
 
 
 
