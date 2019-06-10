@@ -55,7 +55,8 @@ void myLevel::sort_objects()
                       type == "cumgun" || 
                       type == "brutgun"||
                       type == "madgun" ||
-                      type == "doublegun";
+                      type == "doublegun" ||
+                      type == "key";
                       
         bool is_trigger = type == "start" || 
                           type == "level_portal";
