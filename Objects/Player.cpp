@@ -298,7 +298,7 @@ void Player::shoot_doublegun(vector<Bullet*>& hero_bullets,
     
     Vector2f hero_position = get_position();
     Vector2f old_bullet_position = right_bullet->get_position();
-    grsettings.position = Vector2f(hero_position.x -6,old_bullet_position.y);
+    grsettings.position = Vector2f(hero_position.x -34,old_bullet_position.y);
     psettings.main_vertex = grsettings.position;
     
     grsettings.image = "images/doublegunbullet.png";
