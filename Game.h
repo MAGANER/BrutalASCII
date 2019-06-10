@@ -68,6 +68,7 @@ private:
 	void check_hero_teleports_to_next_level();
 	void check_hero_activated_lever();
 	void check_hero_collided_bullets();
+	void check_hero_takes_key();
 	bool check_hero_takes_gun();
     void check_hero_died();
     

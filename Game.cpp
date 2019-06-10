@@ -184,6 +184,7 @@ void Game::draw_game()
     // camera always stays at the center
     camera->setCenter(hero->get_position());
     
+    
     level->draw_level(window);
     window->draw(hero->returnSprite());
     
@@ -191,6 +192,7 @@ void Game::draw_game()
     draw_bullets(turrells_bullets);
     
     //panel doesn't move, cos it must has static position
+    //the same for level
     window->setView(window->getDefaultView());
     parameters_panel->draw(window);
 }
@@ -205,6 +207,7 @@ void Game::run_game()
     check_hero_collided_thorns();
     check_hero_activated_lever();
     check_hero_collided_bullets();
+    check_hero_takes_key();
     
     check_bullets_collided_walls(hero_bullets);
     check_bullets_collided_walls(turrells_bullets);
@@ -214,7 +217,7 @@ void Game::run_game()
     
     
     /// update count of hero's ammo and health counter
-    parameters_panel->update(hero->get_ammo(),hero->get_health());
+    parameters_panel->update(hero->get_ammo(),hero->get_health(),hero->get_keys());
     
     window->setView(*camera);
     window->clear();
@@ -375,6 +378,7 @@ void Game::check_hero_died()
         lever_counter = 0;
         
         hero->destroy_ammo(); // cos when hero dies he must lost all of his ammo
+        hero->choose_new_gun(-1); // no gun, cos he lost all ammo
     }
 }
 
@@ -456,6 +460,20 @@ void Game::check_hero_collided_bullets()
                 hero->set_health(hero->get_health()-1);
             }
         }
+}
+void Game::check_hero_takes_key()
+{
+    vector<GameObject*> usable_objects = level->get_usable_objects();
+    
+    for(size_t i = 0;i<usable_objects.size();++i)
+    {
+        string type = usable_objects[i]->get_type();
+        if(type == "key")
+        {
+            usable_objects.erase(usable_objects.begin() + i);
+            hero->set_keys(hero->get_keys()+1);
+        }
+    }
 }
 
 void Game::delete_menu()
