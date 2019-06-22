@@ -27,8 +27,8 @@ Game::Game()
 	graph_settings->position = Vector2f(80.0f,200.0f);
 	graph_settings->texture_rect = IntRect(0,0,64,64);
 	
-	phys_settings->width = 64;
-	phys_settings->height = 64;
+	phys_settings->width = 70;
+	phys_settings->height = 80;
 	phys_settings->main_vertex = graph_settings->position;
 	
 	game_settings->type = "hero";
@@ -125,28 +125,29 @@ void Game::check_game_key_pressing()
 {
     typedef Keyboard kb;     
     
+    int direction = hero->get_direction();
+    bool collision = check_object_collides_other_object(hero,direction,level->get_walls());
     if(kb::isKeyPressed(kb::A))
     {
-        bool collision = check_object_collides_other_object(hero,Direction::left,level->get_walls());
-        if(!collision) hero->move(Direction::left);
-        
-        
+        hero->set_direction(Direction::left);
+        if(!collision) hero->move(direction);
     }
     if(kb::isKeyPressed(kb::D))
     {
-        bool collision = check_object_collides_other_object(hero,Direction::right,level->get_walls());
-        if(!collision) hero->move(Direction::right);
+        hero->set_direction(Direction::right);
+        if(!collision) hero->move(direction);
     }
     if(kb::isKeyPressed(kb::W))
     {
-        bool collision = check_object_collides_other_object(hero,Direction::up,level->get_walls());
-        if(!collision)hero->move(Direction::up);
+        hero->set_direction(Direction::up);
+        if(!collision) hero->move(direction);
     }
     if(kb::isKeyPressed(kb::S))
     {
-        bool collision = check_object_collides_other_object(hero,Direction::down,level->get_walls());
-        if(!collision) hero->move(Direction::down);
+        hero->set_direction(Direction::down);
+        if(!collision) hero->move(direction);
     }
+    
     if(kb::isKeyPressed(kb::Num1))
     {
         hero->choose_new_gun(0);
@@ -275,13 +276,15 @@ bool Game::check_object_collides_other_object(GameObject* object, int direction,
 {
    CollisionCounter counter = collision_checker.count_object_collisions(object,objects);
    
+   
+   bool dont_collide_bottom_top_side = counter.bottom_side_collisions==0 && counter.top_side_collisions==0;
    switch(direction)
    {
    case Direction::left:
-       return counter.left_side_collisions>0;
+       return counter.left_side_collisions>0 && dont_collide_bottom_top_side;
        break;
    case Direction::right:
-       return counter.right_side_collisions>0;
+       return counter.right_side_collisions>0 &&dont_collide_bottom_top_side;
        break; 
    case Direction::up:
        return counter.top_side_collisions>0;
