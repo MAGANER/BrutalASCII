@@ -40,15 +40,17 @@ protected:
     bool see_target;
  
     CollisionChecker collision_checker;
-    bool check_collided_walls(vector<GameObject*>& walls);
     int generate_direction();
 public:
     Monster(GraphicalSettings graph_settings,PhysicalSettings phys_settings, GameSettings game_settings);
     virtual ~Monster();
 
-    virtual void go(vector<GameObject*>& walls)=0;
-    virtual void search_target(Vector2f& target_pos)=0;
+    void go(bool ability_to_go);
+    virtual void search_target(Vector2f target_pos)=0;
+    virtual void attack()=0;
     bool is_dead();
+    
+    int get_direction();
     
 };
 
