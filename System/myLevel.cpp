@@ -84,6 +84,7 @@ void myLevel::sort_objects()
         {
             GraphicalSettings graph_settings = (*object)->get_graphical_settings();
             PhysicalSettings phys_settings = (*object)->get_phys_settings();
+            phys_settings.speed = Vector2f(5.0f,5.0f);
             GameSettings game_settings = (*object)->get_game_settings();
             if(is_suicide_boy)
             {
@@ -161,6 +162,10 @@ vector<Lever*>& myLevel::get_levers()
 vector<Turrell*>& myLevel::get_turrels()
 {
     return turrels;
+}
+vector<Monster*>& myLevel::get_monsters()
+{
+    return monsters;
 }
 int myLevel::get_turrell_direction(string type)
 {
