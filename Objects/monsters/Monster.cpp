@@ -5,6 +5,7 @@ Monster::Monster(GraphicalSettings graph_settings,
                  GameSettings game_settings):GameObject(graph_settings,phys_settings,game_settings)
 {
     direction = generate_direction();
+    see_target = false;
 }
 
 Monster::~Monster()
