@@ -3,8 +3,8 @@
 
 #include <Level.h>
 #include"Player.h"
-#include"Lever.h"
-#include"Turrell.h"
+#include"triggers/Lever.h"
+#include"triggers/Turrell.h"
 #include"Physics/Direction.h"
 
 /*
