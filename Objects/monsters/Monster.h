@@ -1,7 +1,8 @@
 #ifndef MONSTER_H
 #define MONSTER_H
 #include"GameObject.h"
-#include"Bullet.h"
+#include"bullets/Bullet.h"
+#include"Physics/CollisionChecker.h"
 
 /*
   base class for all monsters of any kind.
@@ -28,15 +29,23 @@
        >>> when he see hero he flies to the one direction with high speed
        >>> dies if collides any wall
     */   
+/*
+  all monsters move at randomly chosen directory
+  until they find target
+*/
 class Monster: public GameObject
 {
 protected: 
-    int damage, health;
+    int damage, health, direction;
+ 
+    CollisionChecker collision_checker;
+    bool check_collided_walls(vector<GameObject*>& walls);
+    int generate_direction();
 public:
     Monster(GraphicalSettings graph_settings,PhysicalSettings phys_settings, GameSettings game_settings);
     virtual ~Monster();
 
-    virtual void live()=0;
+    virtual void go(vector<GameObject*>& walls)=0;
     virtual void search_target(Vector2f& target_pos)=0;
     bool is_dead();
     
