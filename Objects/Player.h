@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include<vector>
-#include"MadBullet.h" // also it includes base class Bullet
+#include"bullets/MadBullet.h"// also it includes base class Bullet
 #include"Physics/Direction.h"
 
 

@@ -1,7 +1,7 @@
 #ifndef BULLET_H
 #define BULLET_H
 
-#include <GameObject.h>
+#include"GameObject.h"
 #include"Physics/Direction.h"
 /*
  all bullets in game have 2 differences: damage and speed

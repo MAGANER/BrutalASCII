@@ -1,6 +1,6 @@
 #ifndef MADBULLET_H
 #define MADBULLET_H
-#include <Bullet.h>
+#include"bullets/Bullet.h"
 
 
 class MadBullet : public Bullet
