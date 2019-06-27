@@ -37,6 +37,7 @@ class Monster: public GameObject
 {
 protected: 
     int damage, health, direction;
+    bool see_target;
  
     CollisionChecker collision_checker;
     bool check_collided_walls(vector<GameObject*>& walls);
