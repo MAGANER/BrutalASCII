@@ -28,22 +28,18 @@ void Player::move(int direction)
     case Direction::left:
         gobject_spr.move(-8.5f,0.0f);
         shooting_direction = Direction::left;
-        moving_direction = Direction::left;
         animation_direction = moving_direction;
         break;
     case Direction::right:
         gobject_spr.move(8.5f,0.0f);
         shooting_direction = Direction::right;
-        moving_direction = Direction::right;
         animation_direction = moving_direction;
         break;
     case Direction::up:
         gobject_spr.move(0.0f,-8.5f);
-        moving_direction = Direction::up;
         break;
     case Direction::down:
         gobject_spr.move(0.0f,8.5f);
-        moving_direction = Direction::down;
         break;
     }
 }
@@ -365,6 +361,10 @@ void Player::choose_new_gun(int gun_number)
 int Player::get_direction()
 {
     return moving_direction;
+}
+void Player::set_direction(int value)
+{
+    moving_direction = value;
 }
 void Player::destroy_ammo()
 {

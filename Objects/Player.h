@@ -44,7 +44,8 @@ public:
     void shoot(vector<Bullet*>& hero_bullets);
     void move(int direction);
     int get_direction();
-
+    void set_direction(int value);
+    
     bool has_any_ammo();    
     void set_ammo(int ammo,string type);
     void destroy_ammo(); // when hero dies
