@@ -6,7 +6,7 @@
 #include"myLevel.h"
 #include"Physics/CollisionChecker.h"
 #include"Physics/Direction.h"
-#include"Bullet.h"
+#include"bullets/Bullet.h"
 #include<iostream>
 #include<time.h>
 
