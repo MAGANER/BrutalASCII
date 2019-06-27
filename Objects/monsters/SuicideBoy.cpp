@@ -12,52 +12,45 @@ SuicideBoy::~SuicideBoy()
 {
 }
 
-void SuicideBoy::go(vector<GameObject*>& walls)
+void SuicideBoy::search_target(Vector2f target_pos)
 {
-    bool collision =  Monster::check_collided_walls(walls);
-    if(!collision)
+    bool is_on_the_same_line_OX = target_pos.x == get_position().x ||
+                                  (target_pos.x+64.0f > get_position().x &&
+                                   target_pos.x+64.0f < get_position().x + 64.0f);
+    
+
+    
+    bool is_below = target_pos.y+64.0f < get_position().y;
+    bool is_under = target_pos.y > get_position().y;
+    
+    if(is_below && is_on_the_same_line_OX)
     {
-        switch(direction)
-        {
-        case Direction::down:
-            gobject_spr.move(0.0f,-speed.y);
-            break;
-        case Direction::left:
-            gobject_spr.move(-speed.x,0.0f);
-            break;
-        case Direction::right:
-            gobject_spr.move(speed.x,0.0f);
-            break;
-        case Direction::up:
-            gobject_spr.move(0.0f,speed.y);
-            break;
-        }
+        see_target = true;
+        attack_direction = Direction::up;
+    }
+    else if(is_under && is_on_the_same_line_OX)
+    {
+        see_target = true;
+        attack_direction = Direction::down;
     }
     else
     {
-        switch(direction)
-        {
-        case Direction::down:
-            direction = Direction::up;
-            break;
-        case Direction::left:
-            direction = Direction::right;
-            break;
-        case Direction::right:
-            direction = Direction::left;
-            break;
-        case Direction::up:
-            direction = Direction::down;
-            break;
-        } 
-        collision = false;
+        see_target = false;
     }
 }
-void SuicideBoy::search_target(Vector2f& target_pos)
+void SuicideBoy::attack()
 {
+    if(see_target)
+    {
+        fly_to_target();
+    }
+}
+void SuicideBoy::fly_to_target()
+{
+    speed = Vector2f(10.0f,10.0f);
+    cout<<"ass"<<endl;
     
 }
-
 
 
 
