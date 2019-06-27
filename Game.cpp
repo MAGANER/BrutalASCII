@@ -126,25 +126,29 @@ void Game::check_game_key_pressing()
     typedef Keyboard kb;     
     
     int direction = hero->get_direction();
-    bool collision = check_object_collides_other_object(hero,direction,level->get_walls());
+    
     if(kb::isKeyPressed(kb::A))
     {
         hero->set_direction(Direction::left);
+        bool collision = check_object_collides_other_object(hero,direction,level->get_walls());
         if(!collision) hero->move(direction);
     }
     if(kb::isKeyPressed(kb::D))
     {
         hero->set_direction(Direction::right);
+        bool collision = check_object_collides_other_object(hero,direction,level->get_walls());
         if(!collision) hero->move(direction);
     }
     if(kb::isKeyPressed(kb::W))
     {
         hero->set_direction(Direction::up);
+        bool collision = check_object_collides_other_object(hero,direction,level->get_walls());
         if(!collision) hero->move(direction);
     }
     if(kb::isKeyPressed(kb::S))
     {
         hero->set_direction(Direction::down);
+        bool collision = check_object_collides_other_object(hero,direction,level->get_walls());
         if(!collision) hero->move(direction);
     }
     
@@ -275,16 +279,13 @@ void Game::load_level()
 bool Game::check_object_collides_other_object(GameObject* object, int direction,vector<GameObject*>& objects)
 {
    CollisionCounter counter = collision_checker.count_object_collisions(object,objects);
-   
-   
-   bool dont_collide_bottom_top_side = counter.bottom_side_collisions==0 && counter.top_side_collisions==0;
    switch(direction)
    {
    case Direction::left:
-       return counter.left_side_collisions>0 && dont_collide_bottom_top_side;
+       return counter.left_side_collisions>0;
        break;
    case Direction::right:
-       return counter.right_side_collisions>0 &&dont_collide_bottom_top_side;
+       return counter.right_side_collisions>0;
        break; 
    case Direction::up:
        return counter.top_side_collisions>0;
