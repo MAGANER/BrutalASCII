@@ -39,6 +39,13 @@ void myLevel::draw_level(RenderWindow* window)
         window->draw((*turrel)->returnSprite());
         ++turrel;
     }
+    
+    auto monster = monsters.begin();
+    while(monster != monsters.end())
+    {
+        window->draw((*monster)->returnSprite());
+        ++monster;
+    }
 }
 void myLevel::sort_objects()
 {
@@ -70,6 +77,20 @@ void myLevel::sort_objects()
                          type == "rturrell" ||
                          type == "uturrell" ||
                          type == "dturrell";
+                         
+        bool is_suicide_boy = type == "sboy";
+        bool is_monster = is_suicide_boy;
+        if(is_monster)
+        {
+            GraphicalSettings graph_settings = (*object)->get_graphical_settings();
+            PhysicalSettings phys_settings = (*object)->get_phys_settings();
+            GameSettings game_settings = (*object)->get_game_settings();
+            if(is_suicide_boy)
+            {
+                SuicideBoy* monster = new SuicideBoy(graph_settings,phys_settings,game_settings);
+                monsters.push_back(monster);
+            }
+        }
         if(is_wall)
         {
             walls.push_back(*object);

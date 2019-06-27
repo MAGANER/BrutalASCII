@@ -6,6 +6,7 @@
 #include"triggers/Lever.h"
 #include"triggers/Turrell.h"
 #include"Physics/Direction.h"
+#include"monsters/SuicideBoy.h"
 
 /*
  when all data is loaded to objects vector
@@ -19,6 +20,7 @@ private:
     vector<GameObject*> usable_objects;//gun, ammo e.t.c
     vector<GameObject*> triggers;
     vector<GameObject*> thorns;
+    vector<Monster*> monsters;
     vector<Lever*> levers;
     
     vector<Turrell*> turrels;
@@ -35,6 +37,7 @@ public:
     vector<GameObject*>& get_usable_objects();
     vector<GameObject*>& get_triggers();
     vector<GameObject*>& get_thorns();
+    vector<Monster*>& get_monsters();
     vector<Lever*>& get_levers();
     vector<Turrell*>& get_turrels();
     
