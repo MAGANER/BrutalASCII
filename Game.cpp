@@ -220,7 +220,7 @@ void Game::run_game()
     //check_bullets_collided_walls(monsters_bullets);
     
     make_turrells_shoot();
-    
+    make_monsters_live();
     
     /// update count of hero's ammo and health counter
     parameters_panel->update(hero->get_ammo(),hero->get_health(),hero->get_keys());
@@ -520,5 +520,29 @@ void Game::make_turrells_shoot()
         ++turrell;
     }
 }
+void Game::make_monsters_live()
+{
+    vector<Monster*> monsters = level->get_monsters();
+    for(size_t i = 0; i<monsters.size();++i)
+    {
+        bool collision = check_object_collides_other_object(monsters[i],monsters[i]->get_direction(),level->get_walls());
+        monsters[i]->go(collision);
+        
+        Vector2f hero_pos = hero->get_position();
+        monsters[i]->search_target(hero_pos);
+        
+        monsters[i]->attack();
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 

@@ -74,6 +74,7 @@ private:
     void check_hero_died();
     
     void make_turrells_shoot();
+    void make_monsters_live();//go, search target and shoot
 	
 	void load_level();
 	
