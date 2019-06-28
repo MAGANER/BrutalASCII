@@ -6,6 +6,7 @@ SuicideBoy::SuicideBoy(GraphicalSettings graph_settings,
                            Monster(graph_settings,phys_settings,game_settings)
 {
     attack_direction = -1;
+    health = 1;
 }
 
 SuicideBoy::~SuicideBoy()
