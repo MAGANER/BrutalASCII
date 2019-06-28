@@ -219,6 +219,8 @@ void Game::run_game()
     check_bullets_collided_walls(turrells_bullets);
     //check_bullets_collided_walls(monsters_bullets);
     
+    check_bullets_shot_down_monsters();
+    
     make_turrells_shoot();
     make_monsters_live();
     
@@ -534,10 +536,33 @@ void Game::make_monsters_live()
         monsters[i]->attack();
     }
 }
-
-
-
-
+void Game::check_bullets_shot_down_monsters()
+{
+    vector<Monster*> monsters = level->get_monsters();
+    for(size_t i = 0; i<monsters.size();++i)
+    {
+        for(size_t n = 0;n<hero_bullets.size();++n)
+        {
+            bool collision = collision_checker.object_collides(monsters[i],hero_bullets[n]);
+            if(collision)
+            {
+                int old_monster_health = level->get_monsters()[i]->get_health();
+                int bullet_damage = hero_bullets[n]->get_damage();
+                
+                level->get_monsters()[i]->set_health(old_monster_health - bullet_damage);
+                hero_bullets.erase(hero_bullets.begin() + n);
+            }
+        }
+    }
+    
+    for(size_t i = 0;i<monsters.size();++i)
+    {
+        if(monsters[i]->is_dead())
+        {
+            level->get_monsters().erase(level->get_monsters().begin() + i);
+        }
+    }
+}
 
 
 

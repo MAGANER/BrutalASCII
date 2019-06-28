@@ -80,6 +80,7 @@ private:
 	
 	void draw_bullets(vector<Bullet*>& bullets);
 	void check_bullets_collided_walls(vector<Bullet*>& bullets);// hero's, monsters', turrells'
+	void check_bullets_shot_down_monsters();
 	
 
 public:
