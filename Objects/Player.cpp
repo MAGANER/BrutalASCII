@@ -85,7 +85,8 @@ bool Player::has_any_ammo()
 }
 void Player::animate()
 {
-    if(animation_direction == Direction::left)
+    bool move_down_or_up = animation_direction == Direction::down || animation_direction == Direction::up;
+    if(animation_direction == Direction::left || move_down_or_up)
     {
         switch(current_gun)
         {
@@ -109,7 +110,7 @@ void Player::animate()
             break;
         }
     }
-    if(animation_direction == Direction::right)
+    if(animation_direction == Direction::right || move_down_or_up)
     {
         switch(current_gun)
         {
@@ -142,11 +143,11 @@ void Player::shoot(vector<Bullet*>& hero_bullets)
     graph_settings.texture_rect = IntRect(0,0,10,10);
     if(shooting_direction == Direction::right)
     {
-        graph_settings.position = Vector2f(get_position().x+74,get_position().y+32);
+        graph_settings.position = Vector2f(get_position().x+90,get_position().y+32);
     }
     if(shooting_direction == Direction::left)
     {
-        graph_settings.position = Vector2f(get_position().x-4,get_position().y+32);
+        graph_settings.position = Vector2f(get_position().x-10,get_position().y+32);
     }
     PhysicalSettings phys_settings;
     phys_settings.height = 10;
@@ -285,6 +286,8 @@ void Player::shoot_doublegun(vector<Bullet*>& hero_bullets,
     grsettings.image = "images/doublegunbullet.png";
     int damage = 2;
     
+    Vector2f bullet_pos = grsettings.position;
+    grsettings.position = Vector2f(get_position().x +80,bullet_pos.y);
     right_bullet = new Bullet(grsettings,psettings,gsettings,damage);
     right_bullet->set_direction(Direction::right);
     hero_bullets.push_back(right_bullet);
