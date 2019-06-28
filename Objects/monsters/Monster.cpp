@@ -76,10 +76,18 @@ void Monster::go(bool ability_to_go)
         ability_to_go = false; 
     }
 }
-
-
-
-
+void Monster::set_health(int value)
+{
+    health = value;
+}
+int Monster::get_health()
+{
+    return health;
+}
+int Monster::get_damage()
+{
+    return damage;
+}
 
 
 

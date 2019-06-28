@@ -48,9 +48,14 @@ public:
     void go(bool ability_to_go);
     virtual void search_target(Vector2f target_pos)=0;
     virtual void attack()=0;
+    
     bool is_dead();
     
     int get_direction();
+    
+    void set_health(int value);
+    int  get_health();
+    int get_damage();
     
 };
 
