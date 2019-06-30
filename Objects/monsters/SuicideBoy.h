@@ -13,7 +13,6 @@
 class SuicideBoy : public Monster
 {
 private:
-    int attack_direction;
     void fly_to_target();
     bool collided_target(PhysicalSettings target_settings);
 public:

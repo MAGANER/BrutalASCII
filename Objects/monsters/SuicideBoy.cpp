@@ -5,7 +5,6 @@ SuicideBoy::SuicideBoy(GraphicalSettings graph_settings,
                        GameSettings game_settings):
                            Monster(graph_settings,phys_settings,game_settings)
 {
-    attack_direction = -1;
     health = 1;
 }
 
@@ -24,15 +23,18 @@ void SuicideBoy::search_target(Vector2f target_pos)
     bool is_below = target_pos.y+64.0f < get_position().y;
     bool is_under = target_pos.y > get_position().y;
     
-    if(is_below && is_on_the_same_line_OX)
+    //SEARCH TARGET ONLY ONE TIME 
+    //WHEN HE FINDS, HE JUST FLIES AS MADMAN
+    
+    if(is_below && is_on_the_same_line_OX && !see_target)
     {
         see_target = true;
-        attack_direction = Direction::up;
+        direction = Direction::up;
     }
-    else if(is_under && is_on_the_same_line_OX)
+    else if(is_under && is_on_the_same_line_OX && !see_target)
     {
         see_target = true;
-        attack_direction = Direction::down;
+        direction = Direction::down;
     }
     else
     {
@@ -48,8 +50,14 @@ void SuicideBoy::attack()
 }
 void SuicideBoy::fly_to_target()
 {
-    speed = Vector2f(10.0f,10.0f);
-    cout<<"ass"<<endl;
+    if(direction == Direction::up)
+    {
+         speed = Vector2f(0.0f,-12.0f);
+    }
+    if(direction == Direction::down)
+    {
+        speed = Vector2f(0.0f,12.0f);
+    }
     
 }
 
