@@ -220,6 +220,8 @@ void Game::run_game()
     //check_bullets_collided_walls(monsters_bullets);
     
     check_bullets_shot_down_monsters();
+    check_suicide_boys_collided_walls();
+    check_suicide_boys_collided_hero();
     
     make_turrells_shoot();
     make_monsters_live();
@@ -563,8 +565,40 @@ void Game::check_bullets_shot_down_monsters()
         }
     }
 }
-
-
+void Game::check_suicide_boys_collided_walls()
+{
+    vector<GameObject*> walls = level->get_walls();
+    for(size_t i = 0;i<walls.size();++i)
+    {
+        //directly get monsters vector
+        //cos this vector can be changed at any time
+        for(size_t n = 0; n<level->get_monsters().size();++n)
+        {
+            bool collision = collision_checker.object_collides(walls[i],level->get_monsters()[n]);
+            if(collision && level->get_monsters()[n]->does_see_target())
+            {
+                auto monsters_begin = level->get_monsters().begin();
+                level->get_monsters().erase(monsters_begin+n);
+            }
+        }
+        
+    }
+}
+void Game::check_suicide_boys_collided_hero()
+{
+    for(size_t n = 0; n<level->get_monsters().size();++n)
+    {
+        bool collision = collision_checker.object_collides(level->get_monsters()[n],hero);
+        if(collision)
+        {
+            auto monsters_begin = level->get_monsters().begin();
+            level->get_monsters().erase(monsters_begin+n);
+            
+            int old_health = hero->get_health();
+            hero->set_health(old_health-2);
+        }
+    }
+}
 
 
 

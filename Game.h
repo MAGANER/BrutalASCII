@@ -82,6 +82,9 @@ private:
 	void check_bullets_collided_walls(vector<Bullet*>& bullets);// hero's, monsters', turrells'
 	void check_bullets_shot_down_monsters();
 	
+	void check_suicide_boys_collided_walls();
+	void check_suicide_boys_collided_hero();
+	
 
 public:
 	Game();
