@@ -88,6 +88,9 @@ int Monster::get_damage()
 {
     return damage;
 }
-
+bool Monster::does_see_target()
+{
+    return see_target;
+}
 
 

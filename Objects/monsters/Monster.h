@@ -57,6 +57,8 @@ public:
     int  get_health();
     int get_damage();
     
+    bool does_see_target();
+    
 };
 
 #endif // MONSTER_H
