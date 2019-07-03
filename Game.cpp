@@ -283,6 +283,8 @@ void Game::load_level()
 bool Game::check_object_collides_other_object(GameObject* object, int direction,vector<GameObject*>& objects)
 {
    CollisionCounter counter = collision_checker.count_object_collisions(object,objects);
+   
+   string object_type = object->get_type();
    switch(direction)
    {
    case Direction::left:
@@ -292,10 +294,32 @@ bool Game::check_object_collides_other_object(GameObject* object, int direction,
        return counter.right_side_collisions>0;
        break; 
    case Direction::up:
-       return counter.top_side_collisions>0;
+       
+       //check it,cos monster sticks to walls
+       if(object_type == "smob")
+       {
+           if(counter.right_side_collisions==0 && counter.left_side_collisions==0)
+           {
+               return counter.top_side_collisions>0;
+           }
+       }
+       else
+       {
+           return counter.top_side_collisions>0;
+       }
        break;
    case Direction::down:
-       return counter.bottom_side_collisions>0;
+       if(object_type == "smob")
+       {
+           if(counter.right_side_collisions==0 && counter.left_side_collisions==0)
+           {
+               return counter.bottom_side_collisions>0;
+           }
+       }
+       else
+       {
+           return counter.bottom_side_collisions>0;
+       }
        break;
    }
 }
@@ -542,7 +566,21 @@ void Game::make_monsters_live()
     for(size_t i = 0; i<smonsters.size();++i)
     {
         bool collision = check_object_collides_other_object(smonsters[i],smonsters[i]->get_direction(),level->get_walls());
+        
         smonsters[i]->go(collision);
+        
+        // fix bug, when monster sticks to the wall
+        int monster_direction = smonsters[i]->get_direction();
+        if(collision && monster_direction == Direction::down)
+        {
+            Vector2f pos = smonsters[i]->get_position();
+            smonsters[i]->set_position(pos.x,pos.y - 20.0f);
+        }
+        if(collision && monster_direction == Direction::up)
+        {
+            Vector2f pos = smonsters[i]->get_position();
+            smonsters[i]->set_position(pos.x,pos.y + 20.0f);
+        }
         
        // Vector2f hero_pos = hero->get_position();
         //monsters[i]->search_target(hero_pos);
