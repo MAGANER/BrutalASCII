@@ -537,9 +537,22 @@ void Game::make_monsters_live()
         
         monsters[i]->attack();
     }
+    
+    vector<BaseShooterMonster*> smonsters = level->get_shooting_monsters();
+    for(size_t i = 0; i<smonsters.size();++i)
+    {
+        bool collision = check_object_collides_other_object(smonsters[i],smonsters[i]->get_direction(),level->get_walls());
+        smonsters[i]->go(collision);
+        
+       // Vector2f hero_pos = hero->get_position();
+        //monsters[i]->search_target(hero_pos);
+        
+       // monsters[i]->attack();
+    }
 }
 void Game::check_bullets_shot_down_monsters()
 {
+    //not shooting monsters
     vector<Monster*> monsters = level->get_monsters();
     for(size_t i = 0; i<monsters.size();++i)
     {
@@ -556,7 +569,6 @@ void Game::check_bullets_shot_down_monsters()
             }
         }
     }
-    
     for(size_t i = 0;i<monsters.size();++i)
     {
         if(monsters[i]->is_dead())
@@ -564,6 +576,35 @@ void Game::check_bullets_shot_down_monsters()
             level->get_monsters().erase(level->get_monsters().begin() + i);
         }
     }
+    
+    
+    //shooting monsters
+    vector<BaseShooterMonster*> smonsters = level->get_shooting_monsters();
+    for(size_t i = 0; i<smonsters.size();++i)
+    {
+        for(size_t n = 0;n<hero_bullets.size();++n)
+        {
+            bool collision = collision_checker.object_collides(smonsters[i],hero_bullets[n]);
+            if(collision)
+            {
+                int old_monster_health = level->get_shooting_monsters()[i]->get_health();
+                int bullet_damage = hero_bullets[n]->get_damage();
+                
+                level->get_shooting_monsters()[i]->set_health(old_monster_health - bullet_damage);
+                hero_bullets.erase(hero_bullets.begin() + n);
+            }
+        }
+    }
+
+    for(size_t y = 0;y<level->get_shooting_monsters().size();++y)
+    {
+        if(level->get_shooting_monsters()[y]->is_dead())
+        {
+            level->get_shooting_monsters().erase(level->get_shooting_monsters().begin() + y);
+        }
+    }
+    
+
 }
 void Game::check_suicide_boys_collided_walls()
 {
