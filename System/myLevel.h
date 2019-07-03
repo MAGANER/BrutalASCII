@@ -7,6 +7,7 @@
 #include"triggers/Turrell.h"
 #include"Physics/Direction.h"
 #include"monsters/SuicideBoy.h"
+#include"monsters/StupidShooter.h"
 
 /*
  when all data is loaded to objects vector
@@ -21,6 +22,7 @@ private:
     vector<GameObject*> triggers;
     vector<GameObject*> thorns;
     vector<Monster*> monsters;
+    vector<BaseShooterMonster*> shooting_monsters;
     vector<Lever*> levers;
     
     vector<Turrell*> turrels;
@@ -38,6 +40,8 @@ public:
     vector<GameObject*>& get_triggers();
     vector<GameObject*>& get_thorns();
     vector<Monster*>& get_monsters();
+    vector<BaseShooterMonster*>& get_shooting_monsters();
+    vector<Monster*>& get_ALL_monsters();
     vector<Lever*>& get_levers();
     vector<Turrell*>& get_turrels();
     
@@ -46,6 +50,7 @@ public:
     
     void draw_level(RenderWindow* window); // whole level
     void load(string level_path); // load objects and then sort them
+    
     
     void clear();
 };

@@ -46,6 +46,13 @@ void myLevel::draw_level(RenderWindow* window)
         window->draw((*monster)->returnSprite());
         ++monster;
     }
+    
+    auto shooter  = shooting_monsters.begin();
+    while(shooter !=shooting_monsters.end())
+    {
+        window->draw((*shooter)->returnSprite());
+        ++shooter;
+    }
 }
 void myLevel::sort_objects()
 {
@@ -79,7 +86,8 @@ void myLevel::sort_objects()
                          type == "dturrell";
                          
         bool is_suicide_boy = type == "sboy";
-        bool is_monster = is_suicide_boy;
+        bool is_stupid_monster = type =="smob";
+        bool is_monster = is_suicide_boy || is_stupid_monster;
         if(is_monster)
         {
             GraphicalSettings graph_settings = (*object)->get_graphical_settings();
@@ -90,6 +98,11 @@ void myLevel::sort_objects()
             {
                 SuicideBoy* monster = new SuicideBoy(graph_settings,phys_settings,game_settings);
                 monsters.push_back(monster);
+            }
+            if(is_stupid_monster)
+            {
+                StupidShooter* monster = new StupidShooter(graph_settings,phys_settings,game_settings,50);
+                shooting_monsters.push_back(monster);
             }
         }
         if(is_wall)
@@ -167,6 +180,10 @@ vector<Monster*>& myLevel::get_monsters()
 {
     return monsters;
 }
+vector<BaseShooterMonster*>& myLevel::get_shooting_monsters()
+{
+    return shooting_monsters;
+}
 int myLevel::get_turrell_direction(string type)
 {
     if(type == "lturrell")
@@ -221,9 +238,6 @@ GameObject* myLevel::get_trigger(string type)
         ++trigger;
     }
 }
-
-
-
 
 
 
