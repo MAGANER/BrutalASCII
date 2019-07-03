@@ -15,11 +15,11 @@
        >>> don't "listen to" comrades 
        
      middle:
-       >>> listen to comrades
+       >>> listen to comrades(when find target, move,relating to another monsters)
        >>> try to avoid hero's bullet if hero isn't near
      
      smart:
-       >>> listen to comrades
+       >>> listen to comrades(when find target, move,relating to another monsters)
        >>> always avoid hero's bullet if one is near
        >>> shoot faster 
        
@@ -45,12 +45,13 @@ public:
     Monster(GraphicalSettings graph_settings,PhysicalSettings phys_settings, GameSettings game_settings);
     virtual ~Monster();
 
-    void go(bool ability_to_go);
+    virtual void go(bool ability_to_go);
     virtual void search_target(Vector2f target_pos)=0;
     virtual void attack()=0;
     
     bool is_dead();
     
+    void set_direction(int value);
     int get_direction();
     
     void set_health(int value);
