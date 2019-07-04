@@ -221,7 +221,7 @@ Vector2f myLevel::get_hero_start()
     while(trigger != triggers.end())
     {
         string type = (*trigger)->get_type();
-        if(type == "start")
+        if(type == "shit")
         {
             return (*trigger)->get_position();
         }
