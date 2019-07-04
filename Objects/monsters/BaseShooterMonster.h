@@ -12,8 +12,8 @@ class BaseShooterMonster : public Monster
 {
 private:
     int target_seeing_radius; // see target if it's in the radius
-protected:
     int attack_direction;
+protected:
     void shoot(int direction,vector<Bullet*>& monster_bullets);
     bool is_bullet_near(vector<Bullet*>& hero_bullets);
     void animate();
@@ -28,8 +28,7 @@ public:
     void search_target(Vector2f target_pos);
     bool is_any_wall_between_itself_and_target(vector<GameObject*>& walls,Vector2f target_pos);
     void attack();
-    void attack(vector<Bullet*>& monster_bullets);
-    
+    void attack(vector<Bullet*>& monster_bullets);    
     
     virtual void avoid_bullet() =0;
     virtual void follow_target() =0;

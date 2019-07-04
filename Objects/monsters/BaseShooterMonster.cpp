@@ -21,8 +21,8 @@ void BaseShooterMonster::search_target(Vector2f target_pos)
     bool is_lefter  = target_pos.x+64.0f < my_pos.x;
     bool is_righter = target_pos.x > my_pos.x+64.0f;
     
-    bool on_the_same_line_OY_first_case = ( mod(my_pos.y) < mod(target_pos.y) ) &&
-                                          ( mod(my_pos.y+64.0f) > mod(target_pos.y));
+    bool on_the_same_line_OY_first_case = ( mod(my_pos.y) > mod(target_pos.y) ) &&
+                                          ( mod(my_pos.y+64.0f) < mod(target_pos.y));
                                           
     bool on_the_same_line_OY_second_case = ( mod(my_pos.y) > mod(target_pos.y+64.0f) ) &&
                                            ( mod(my_pos.y) < mod(target_pos.y));
@@ -34,7 +34,7 @@ void BaseShooterMonster::search_target(Vector2f target_pos)
                                on_the_same_line_OY_third_case;
                                                                                
     
-    bool see_target_at_right_direction =  mod(target_pos.x) < mod(my_pos.x+64.0f+target_seeing_radius);
+    bool see_target_at_right_direction =  mod(target_pos.x) > mod(my_pos.x+64.0f+target_seeing_radius);
     bool see_target_at_left_direction  =  mod(target_pos.x+64.0f) < mod(my_pos.x-target_seeing_radius);
     
     
@@ -42,11 +42,11 @@ void BaseShooterMonster::search_target(Vector2f target_pos)
     
     bool target_is_lefter  = is_lefter                    &&
                              see_target_at_left_direction && 
-                             (direction == Direction::left|| monster_moves_up_or_down);
+                             (direction == Direction::left);
                             
     bool target_is_righter = is_righter                    && 
                              see_target_at_right_direction && 
-                             (direction == Direction::right|| monster_moves_up_or_down); 
+                             (direction == Direction::right); 
     if(target_is_lefter && on_the_same_line_OY)
     {
         attack_direction = Direction::left;
@@ -68,11 +68,8 @@ void BaseShooterMonster::attack()
 }
 void BaseShooterMonster::attack(vector<Bullet*>& monster_bullets)
 {
-    if(see_target)
-    {
         cout<<"attack"<<endl;
         //shoot(attack_direction,monster_bullets);
-    }
 }
 void BaseShooterMonster::shoot(int direction, vector<Bullet*>& monster_bullets)
 {
@@ -163,8 +160,6 @@ bool BaseShooterMonster::is_any_wall_between_itself_and_target(vector<GameObject
         {
             return true;
         }
-        
-        
     }
 }
 
