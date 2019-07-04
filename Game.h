@@ -39,6 +39,7 @@ private:
     
     vector<Bullet*> hero_bullets;
     vector<Bullet*> turrells_bullets;
+    vector<Bullet*> monster_bullets;
 
 	enum GameState
 	{
