@@ -95,7 +95,6 @@ void Game::run()
 			run_game_over();
 			break;
 		}
-		
 	}
 }
 void Game::check_main_menu_key_pressing()
@@ -609,11 +608,6 @@ void Game::make_monsters_live()
             Vector2f pos = smonsters[i]->get_position();
             smonsters[i]->set_position(pos.x,pos.y + 20.0f);
         }
-        
-        
-
-        
-        
     }
 }
 void Game::check_bullets_shot_down_monsters()
