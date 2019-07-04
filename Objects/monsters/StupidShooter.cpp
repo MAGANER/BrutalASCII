@@ -16,13 +16,13 @@ StupidShooter::~StupidShooter()
 {
 }
 
-void StupidShooter::avoid_bullet()
+void StupidShooter::avoid_bullet(vector<Bullet*> & hero_bullets)
 {
     //do nothing
 }
 void StupidShooter::follow_target()
 {
-    
+    //do nothing
 }
 
 

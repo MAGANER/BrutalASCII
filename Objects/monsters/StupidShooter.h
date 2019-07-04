@@ -7,6 +7,7 @@
 /*
  >>don't avoid bullet
  >>don't see at comrades
+ >>don't follow target
 */
 class StupidShooter : public BaseShooterMonster
 {
@@ -17,7 +18,7 @@ public:
                   int visible_radius);
     ~StupidShooter();
     
-    void avoid_bullet();
+    void avoid_bullet(vector<Bullet*> & hero_bullets);
     void follow_target();
 
 
