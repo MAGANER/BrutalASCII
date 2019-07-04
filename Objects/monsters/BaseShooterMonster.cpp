@@ -7,10 +7,14 @@ BaseShooterMonster::BaseShooterMonster(GraphicalSettings graph_settings,
                 :Monster(graph_settings,phys_settings,game_settings)
 {
     target_seeing_radius = visible_radius;
+    
+    
+    shooting_timer = new Timer(1.0f);
 }
 
 BaseShooterMonster::~BaseShooterMonster()
 {
+    delete shooting_timer;
 }
 
 
@@ -68,8 +72,12 @@ void BaseShooterMonster::attack()
 }
 void BaseShooterMonster::attack(vector<Bullet*>& monster_bullets)
 {
-        cout<<"attack"<<endl;
-        //shoot(attack_direction,monster_bullets);
+        shooting_timer->tic();
+        Time elapsed_time = shooting_timer->get_elapsed_time();
+        if(elapsed_time.asSeconds() > 0.4f)
+        {
+            shoot(attack_direction,monster_bullets);
+        }
 }
 void BaseShooterMonster::shoot(int direction, vector<Bullet*>& monster_bullets)
 {
@@ -89,6 +97,8 @@ void BaseShooterMonster::shoot(int direction, vector<Bullet*>& monster_bullets)
     {
         grsettings.position = Vector2f(get_position().x-10,get_position().y+32);
     }
+    
+    psettings.speed = Vector2f(10.0f,0.0f);
     psettings.height = 10;
     psettings.width = 10;
     psettings.main_vertex = grsettings.position;

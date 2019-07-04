@@ -3,6 +3,7 @@
 
 #include"mod.h"
 #include"Monster.h"
+#include"Timer.h"
 
 /*
  base class for monsters with guns
@@ -13,6 +14,8 @@ class BaseShooterMonster : public Monster
 private:
     int target_seeing_radius; // see target if it's in the radius
     int attack_direction;
+    
+    Timer* shooting_timer;
 protected:
     void shoot(int direction,vector<Bullet*>& monster_bullets);
     bool is_bullet_near(vector<Bullet*>& hero_bullets);
