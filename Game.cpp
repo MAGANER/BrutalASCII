@@ -4,7 +4,6 @@ Game::Game()
 {
 	window = new RenderWindow(VideoMode(720, 640), "BrutalDeath");
 	window->setFramerateLimit(60); // to optimize CPU
-	//window->setVerticalSyncEnabled(true);
 	
 	menu = new MainMenu();
 	game_over = new GameOverMenu();
@@ -67,6 +66,7 @@ Game::~Game()
 
 void Game::check_window_events()
 {
+    //check SFML events or window ones
 	Event event;
 	while (window->pollEvent(event))
 	{
@@ -78,6 +78,7 @@ void Game::check_window_events()
 }
 void Game::run()
 {
+    //run whole app, relating to current state
 	while (window->isOpen())
 	{
 		check_window_events();
@@ -125,8 +126,9 @@ void Game::check_game_key_pressing()
 {
     typedef Keyboard kb;     
     
+    
+    //check keys to move hero
     int direction = hero->get_direction();
-
     if(kb::isKeyPressed(kb::A))
     {
         hero->set_direction(Direction::left);
@@ -152,6 +154,7 @@ void Game::check_game_key_pressing()
         if(!collision) hero->move(direction);
     }
     
+    //check keys to choose gun
     if(kb::isKeyPressed(kb::Num1))
     {
         hero->choose_new_gun(0);
@@ -172,6 +175,8 @@ void Game::check_game_key_pressing()
     {
         hero->choose_new_gun(4);
     }
+    
+    //check key to shoot
     if(kb::isKeyPressed(kb::Space) && !key_is_pressed)
     {
         hero->shoot(hero_bullets);
@@ -195,6 +200,7 @@ void Game::draw_game()
     
     draw_bullets(hero_bullets);
     draw_bullets(turrells_bullets);
+    draw_bullets(monsters_bullets);
     
     //panel doesn't move, cos it must has static position
     //the same for level
@@ -205,19 +211,22 @@ void Game::run_game()
 {
     load_level();
     
+    //check hero's taken actions
     check_game_key_pressing();
     check_hero_takes_gun();
     check_hero_died();
     check_hero_teleports_to_next_level();
     check_hero_collided_thorns();
     check_hero_activated_lever();
-    check_hero_collided_bullets();
+    check_hero_collided_bullets(monsters_bullets);
+    check_hero_collided_bullets(turrells_bullets);
+    check_hero_collided_bullets(hero_bullets);
     check_hero_takes_key();
     check_hero_opens_door();
     
     check_bullets_collided_walls(hero_bullets);
     check_bullets_collided_walls(turrells_bullets);
-    //check_bullets_collided_walls(monsters_bullets);
+    check_bullets_collided_walls(monsters_bullets);
     
     check_bullets_shot_down_monsters();
     check_suicide_boys_collided_walls();
@@ -418,6 +427,7 @@ void Game::check_hero_died()
 
 void Game::check_hero_teleports_to_next_level()
 {
+    //if hero collided portal and he activated 3 levers, he can teleport
     GameObject* portal = level->get_trigger("level_portal");
     CollisionCounter counter = collision_checker.count_object_collisions(hero,portal);
     int collision = counter.get_collisions_summ();
@@ -455,6 +465,7 @@ void Game::check_hero_collided_thorns()
 }
 void Game::check_hero_activated_lever()
 {
+    //if he collides lever, it became activated
     vector<Lever*> levers = level->get_levers();
     auto lever = levers.begin();
     while(lever != levers.end())
@@ -472,25 +483,14 @@ void Game::check_hero_activated_lever()
         ++lever;
     }
 }
-void Game::check_hero_collided_bullets()
+void Game::check_hero_collided_bullets(vector<Bullet*>& bullets)
 {
-        for(size_t bullet = 0; bullet<turrells_bullets.size();++bullet)
+        for(size_t bullet = 0; bullet<bullets.size();++bullet)
         {
-            bool collision = collision_checker.object_collides(hero,turrells_bullets[bullet]);
+            bool collision = collision_checker.object_collides(hero,bullets[bullet]);
             if(collision)
             {
-                turrells_bullets.erase(turrells_bullets.begin()+bullet);
-                
-                hero->set_health(hero->get_health()-1);
-            }
-        }
-        
-        for(size_t bullet = 0; bullet<hero_bullets.size();++bullet)
-        {
-            bool collision = collision_checker.object_collides(hero,hero_bullets[bullet]);
-            if(collision)
-            {
-                hero_bullets.erase(hero_bullets.begin()+bullet);
+                bullets.erase(bullets.begin()+bullet);
                 
                 hero->set_health(hero->get_health()-1);
             }
@@ -498,6 +498,7 @@ void Game::check_hero_collided_bullets()
 }
 void Game::check_hero_takes_key()
 {
+    //when hero takes key, his key counter increases 
     vector<GameObject*> usable_objects = level->get_usable_objects();
     
     for(size_t i = 0;i<usable_objects.size();++i)
@@ -514,6 +515,8 @@ void Game::check_hero_takes_key()
 }
 void Game::check_hero_opens_door()
 {
+    //when hero opens door, door wall becomes destroyed
+    //but to do that, hero needs at least 1 key
     vector<GameObject*> walls = level->get_triggers();
     for(size_t i = 0;i<walls.size();++i)
     {
@@ -542,6 +545,7 @@ void Game::delete_menu()
 }
 void Game::make_turrells_shoot()
 {
+    //they always shoot
     vector<Turrell*> turrells = level->get_turrels();
     auto turrell = turrells.begin();
     while(turrell != turrells.end())
@@ -579,7 +583,7 @@ void Game::make_monsters_live()
         bool able_to_attack = see_target && see_no_walls;
         if(able_to_attack)
         {
-            smonsters[i]->attack(monster_bullets);
+            smonsters[i]->attack(monsters_bullets);
         }
         
         
