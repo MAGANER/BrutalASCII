@@ -41,7 +41,6 @@ public:
     vector<GameObject*>& get_thorns();
     vector<Monster*>& get_monsters();
     vector<BaseShooterMonster*>& get_shooting_monsters();
-    vector<Monster*>& get_ALL_monsters();
     vector<Lever*>& get_levers();
     vector<Turrell*>& get_turrels();
     

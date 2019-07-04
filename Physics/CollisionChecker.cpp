@@ -489,8 +489,8 @@ bool CollisionChecker::right_side_collision(PhysicalObject * objectA, PhysicalOb
     bool collision = first_condition
                   && third_condition
                   && fourth_condition
-                  && fifth_condition
-                  && (second_condition && sixth_condition);
+                  && fifth_condition;
+                  //&& (second_condition && sixth_condition);
 
 
     return collision;
@@ -529,8 +529,8 @@ bool CollisionChecker::right_side_collision(PhysicalSettings objectA_settings,Ph
     bool collision = first_condition
                   && third_condition
                   && fourth_condition
-                  && fifth_condition
-                  && (second_condition && sixth_condition);
+                  && fifth_condition;
+                  //&& (second_condition && sixth_condition);
 
 
     return collision;
@@ -564,8 +564,8 @@ bool CollisionChecker::bottom_side_collision(PhysicalObject * objectA, PhysicalO
 
     bool collision = first_condition
                   && second_condition
-                  && third_condition
-                  && ( fifth_condition && fourth_condition);
+                  && third_condition;
+                //  && ( fifth_condition && fourth_condition);
 
     if(collision)
     {
@@ -603,8 +603,8 @@ bool CollisionChecker::bottom_side_collision(PhysicalSettings objectA_settings,P
 
     bool collision = first_condition
                   && second_condition
-                  && third_condition
-                  && ( fifth_condition && fourth_condition);
+                  && third_condition;
+                 // && ( fifth_condition && fourth_condition);
 
     if(collision)
     {
@@ -646,8 +646,8 @@ bool CollisionChecker::top_side_collision(PhysicalObject * objectA, PhysicalObje
 
     bool collision = first_condition
                   && second_condition
-                  && third_condition
-                  && ( fifth_condition && fourth_condition);
+                  && third_condition;
+                  //&& ( fifth_condition && fourth_condition);
     if(collision)
     {
         return true;
@@ -686,8 +686,8 @@ bool CollisionChecker::top_side_collision(PhysicalSettings objectA_settings,Phys
 
     bool collision = first_condition
                   && second_condition
-                  && third_condition
-                  && ( fifth_condition && fourth_condition);
+                  && third_condition;
+                  //&& ( fifth_condition && fourth_condition);
     if(collision)
     {
         return true;

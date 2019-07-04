@@ -56,9 +56,10 @@ void myLevel::draw_level(RenderWindow* window)
 }
 void myLevel::sort_objects()
 {
-    
     // sort objects,relating to their types
+    
     auto object = objects.begin();
+    
     while(object != objects.end())
     {
         string type = (*object)->get_type();
@@ -72,7 +73,7 @@ void myLevel::sort_objects()
                       type == "doublegun" ||
                       type == "key";
                       
-        bool is_trigger = type == "start" || 
+        bool is_trigger = 
                           type == "level_portal" ||
                           type == "door";
         
@@ -105,7 +106,7 @@ void myLevel::sort_objects()
                 shooting_monsters.push_back(monster);
             }
         }
-        if(is_wall)
+        else if(is_wall)
         {
             walls.push_back(*object);
         }
@@ -143,7 +144,6 @@ void myLevel::sort_objects()
         
         ++object;
     }
-    
     // now it's useless
     objects.clear();
 }
@@ -211,6 +211,9 @@ void myLevel::clear()
     triggers.clear();
     thorns.clear();
     levers.clear();
+    monsters.clear();
+    shooting_monsters.clear();
+    
 }
 Vector2f myLevel::get_hero_start()
 {
