@@ -126,7 +126,7 @@ void Game::check_game_key_pressing()
     typedef Keyboard kb;     
     
     int direction = hero->get_direction();
-    
+
     if(kb::isKeyPressed(kb::A))
     {
         hero->set_direction(Direction::left);
@@ -270,7 +270,6 @@ void Game::draw_bullets(vector<Bullet*>& bullets)
 void Game::load_level()
 {
     /// load level if it isn't loaded already
-    
     if(!level_is_loaded)
     {
         level->load("levels/"+to_string(level_counter)+".json");
@@ -422,10 +421,13 @@ void Game::check_hero_teleports_to_next_level()
     GameObject* portal = level->get_trigger("level_portal");
     CollisionCounter counter = collision_checker.count_object_collisions(hero,portal);
     int collision = counter.get_collisions_summ();
-    
+
     if(collision > 0 && lever_counter == 3)
     {
         level->clear();
+        hero_bullets.clear();
+        turrells_bullets.clear();
+        
         level_counter++;
         level_is_loaded = false;
         lever_counter = 0;
@@ -565,10 +567,32 @@ void Game::make_monsters_live()
     vector<BaseShooterMonster*> smonsters = level->get_shooting_monsters();
     for(size_t i = 0; i<smonsters.size();++i)
     {
-        bool collision = check_object_collides_other_object(smonsters[i],smonsters[i]->get_direction(),level->get_walls());
         
-        smonsters[i]->go(collision);
+        //search target
+        Vector2f hero_pos = hero->get_position();
+        smonsters[i]->search_target(hero_pos);
         
+        // see target, if there is no wall before one
+        bool see_no_walls = !smonsters[i]->is_any_wall_between_itself_and_target(level->get_walls(),hero_pos);
+        bool see_target = smonsters[i]->does_see_target();
+        
+        bool able_to_attack = see_target && see_no_walls;
+        if(able_to_attack)
+        {
+            smonsters[i]->attack(monster_bullets);
+        }
+        
+        
+        bool collision = check_object_collides_other_object(smonsters[i],
+                                                            smonsters[i]->get_direction(),
+                                                            level->get_walls());
+        
+        bool cannot_go = !smonsters[i]->is_any_wall_between_itself_and_target(level->get_walls(),hero_pos) &&
+                         smonsters[i]->does_see_target();
+        if(!cannot_go)
+        {
+            smonsters[i]->go(collision);
+        }
         // fix bug, when monster sticks to the wall
         int monster_direction = smonsters[i]->get_direction();
         if(collision && monster_direction == Direction::down)
@@ -582,10 +606,10 @@ void Game::make_monsters_live()
             smonsters[i]->set_position(pos.x,pos.y + 20.0f);
         }
         
-       // Vector2f hero_pos = hero->get_position();
-        //monsters[i]->search_target(hero_pos);
         
-       // monsters[i]->attack();
+
+        
+        
     }
 }
 void Game::check_bullets_shot_down_monsters()
