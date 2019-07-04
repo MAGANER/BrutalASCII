@@ -27,7 +27,6 @@ bool Monster::is_dead()
 }
 int Monster::generate_direction()
 {
-    srand(time(0));
     return Direction::left + rand() % Direction::down;
 }
 
@@ -91,9 +90,5 @@ int Monster::get_damage()
 bool Monster::does_see_target()
 {
     return see_target;
-}
-void Monster::set_direction(int value)
-{
-    
 }
 
