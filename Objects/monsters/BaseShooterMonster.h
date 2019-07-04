@@ -1,7 +1,7 @@
 #ifndef BASESHOOTERMONSTER_H
 #define BASESHOOTERMONSTER_H
 
-
+#include"mod.h"
 #include"Monster.h"
 
 /*
@@ -11,7 +11,7 @@
 class BaseShooterMonster : public Monster
 {
 private:
-    int target_seeing_radius;
+    int target_seeing_radius; // see target if it's in the radius
 protected:
     int attack_direction;
     void shoot(int direction,vector<Bullet*>& monster_bullets);
@@ -26,6 +26,7 @@ public:
     
     void go(bool ability_to_go);
     void search_target(Vector2f target_pos);
+    bool is_any_wall_between_itself_and_target(vector<GameObject*>& walls,Vector2f target_pos);
     void attack();
     void attack(vector<Bullet*>& monster_bullets);
     

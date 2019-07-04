@@ -13,6 +13,7 @@ BaseShooterMonster::~BaseShooterMonster()
 {
 }
 
+
 void BaseShooterMonster::search_target(Vector2f target_pos)
 {
     Vector2f my_pos = get_position();
@@ -20,15 +21,45 @@ void BaseShooterMonster::search_target(Vector2f target_pos)
     bool is_lefter  = target_pos.x+64.0f < my_pos.x;
     bool is_righter = target_pos.x > my_pos.x+64.0f;
     
-    bool see_target = abs(target_pos.x < my_pos.x+target_seeing_radius);
+    bool on_the_same_line_OY_first_case = ( mod(my_pos.y) < mod(target_pos.y) ) &&
+                                          ( mod(my_pos.y+64.0f) > mod(target_pos.y));
+                                          
+    bool on_the_same_line_OY_second_case = ( mod(my_pos.y) > mod(target_pos.y+64.0f) ) &&
+                                           ( mod(my_pos.y) < mod(target_pos.y));
     
-    if(is_lefter && see_target)
+    bool on_the_same_line_OY_third_case  = mod(my_pos.y) == mod(target_pos.y);
+                                          
+    bool on_the_same_line_OY = on_the_same_line_OY_first_case ||
+                               on_the_same_line_OY_second_case||
+                               on_the_same_line_OY_third_case;
+                                                                               
+    
+    bool see_target_at_right_direction =  mod(target_pos.x) < mod(my_pos.x+64.0f+target_seeing_radius);
+    bool see_target_at_left_direction  =  mod(target_pos.x+64.0f) < mod(my_pos.x-target_seeing_radius);
+    
+    
+    bool monster_moves_up_or_down = direction == Direction::down || direction == Direction::up;
+    
+    bool target_is_lefter  = is_lefter                    &&
+                             see_target_at_left_direction && 
+                             (direction == Direction::left|| monster_moves_up_or_down);
+                            
+    bool target_is_righter = is_righter                    && 
+                             see_target_at_right_direction && 
+                             (direction == Direction::right|| monster_moves_up_or_down); 
+    if(target_is_lefter && on_the_same_line_OY)
     {
         attack_direction = Direction::left;
+        see_target = true;
     }
-    if(is_righter && see_target)
+    else if(target_is_righter && on_the_same_line_OY)
     {
         attack_direction = Direction::right;
+        see_target = true;
+    }
+    else
+    {
+        see_target = false;
     }
 }
 void BaseShooterMonster::attack()
@@ -39,7 +70,8 @@ void BaseShooterMonster::attack(vector<Bullet*>& monster_bullets)
 {
     if(see_target)
     {
-        shoot(attack_direction,monster_bullets);
+        cout<<"attack"<<endl;
+        //shoot(attack_direction,monster_bullets);
     }
 }
 void BaseShooterMonster::shoot(int direction, vector<Bullet*>& monster_bullets)
@@ -103,8 +135,45 @@ bool BaseShooterMonster::is_bullet_near(vector<Bullet*>& hero_bullets)
         {
             return false;
         }
+    }
+}
+bool BaseShooterMonster::is_any_wall_between_itself_and_target(vector<GameObject*>& walls,Vector2f target_pos)
+{
+    for(size_t i = 0;i<walls.size();++i)
+    {
+        Vector2f wall_pos = walls[i]->get_position();
+        Vector2f mob_pos = get_position();
+        
+        bool wall_is_lefter_than_target  = wall_pos.x +64.0f < target_pos.x;
+        bool wall_is_righter_than_target = wall_pos.x > target_pos.x + 64.0f;
+        
+        bool wall_is_lefter_than_mob = wall_pos.x +64.0f < mob_pos.x;
+        bool wall_is_righter_than_mob = wall_pos.x > mob_pos.x + 64.0f;
+        
+        //if wall is lefter/righter than both target and monster
+        //than it's not between em
+        
+        bool first_case  = wall_is_lefter_than_mob  && wall_is_lefter_than_target;
+        bool second_case = wall_is_righter_than_mob && wall_is_righter_than_target;
+        if(first_case || second_case)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+        
         
     }
 }
+
+
+
+
+
+
+
+
 
 
