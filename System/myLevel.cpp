@@ -95,6 +95,9 @@ void myLevel::sort_objects()
             PhysicalSettings phys_settings = (*object)->get_phys_settings();
             phys_settings.speed = Vector2f(5.0f,5.0f);
             GameSettings game_settings = (*object)->get_game_settings();
+            
+            
+            srand(time(0)); //in monster's constructor moving direction is generated 
             if(is_suicide_boy)
             {
                 SuicideBoy* monster = new SuicideBoy(graph_settings,phys_settings,game_settings);
