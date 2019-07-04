@@ -33,7 +33,7 @@ public:
     void attack();
     void attack(vector<Bullet*>& monster_bullets);    
     
-    virtual void avoid_bullet() =0;
+    virtual void avoid_bullet(vector<Bullet*> & hero_bullets) =0;
     virtual void follow_target() =0;
     
 };

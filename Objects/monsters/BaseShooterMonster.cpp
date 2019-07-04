@@ -7,7 +7,16 @@ BaseShooterMonster::BaseShooterMonster(GraphicalSettings graph_settings,
                 :Monster(graph_settings,phys_settings,game_settings)
 {
     target_seeing_radius = visible_radius;
+       
     
+      // \\    
+    //(^_^)\\ 
+    
+    //just for fun
+    if(direction == Direction::down || direction == Direction::up)
+    {
+        target_seeing_radius*=4;
+    }
     
     shooting_timer = new Timer(1.0f);
 }
@@ -25,20 +34,37 @@ void BaseShooterMonster::search_target(Vector2f target_pos)
     bool is_lefter  = target_pos.x+64.0f < my_pos.x;
     bool is_righter = target_pos.x > my_pos.x+64.0f;
     
-    bool on_the_same_line_OY_first_case = ( mod(my_pos.y) > mod(target_pos.y) ) &&
-                                          ( mod(my_pos.y+64.0f) < mod(target_pos.y));
+    bool on_the_same_line_OY;
+    if(direction == Direction::left || direction == Direction::right)
+    {
+        bool on_the_same_line_OY_first_case = ( mod(my_pos.y) > mod(target_pos.y) ) &&
+                                              ( mod(my_pos.y+64.0f) < mod(target_pos.y));
                                           
-    bool on_the_same_line_OY_second_case = ( mod(my_pos.y) > mod(target_pos.y+64.0f) ) &&
-                                           ( mod(my_pos.y) < mod(target_pos.y));
+        bool on_the_same_line_OY_second_case = ( mod(my_pos.y) > mod(target_pos.y+64.0f) ) &&
+                                               ( mod(my_pos.y) < mod(target_pos.y));
     
-    bool on_the_same_line_OY_third_case  = mod(my_pos.y) == mod(target_pos.y);
+        bool on_the_same_line_OY_third_case  = mod(my_pos.y) == mod(target_pos.y);
                                           
-    bool on_the_same_line_OY = on_the_same_line_OY_first_case ||
-                               on_the_same_line_OY_second_case||
-                               on_the_same_line_OY_third_case;
+        on_the_same_line_OY = on_the_same_line_OY_first_case ||
+                              on_the_same_line_OY_second_case||
+                              on_the_same_line_OY_third_case;
+    }
+    else
+    {
+        bool on_the_same_line_OY_first_case = ( mod(my_pos.y) > mod(target_pos.y) ) &&
+                                              ( mod(my_pos.y) < mod(target_pos.y + 64.0f));
+                                              
+        bool on_the_same_line_OY_second_case = ( mod(target_pos.y) > mod(my_pos.y) ) &&
+                                               ( mod(target_pos.y) < mod(my_pos.y + 64.0f));
+                                               
+        on_the_same_line_OY = on_the_same_line_OY_first_case ||
+                              on_the_same_line_OY_second_case;
+    }
+    
+
                                                                                
     
-    bool see_target_at_right_direction =  mod(target_pos.x) > mod(my_pos.x+64.0f+target_seeing_radius);
+    bool see_target_at_right_direction =  mod(target_pos.x) < mod(my_pos.x+64.0f+target_seeing_radius);
     bool see_target_at_left_direction  =  mod(target_pos.x+64.0f) < mod(my_pos.x-target_seeing_radius);
     
     
@@ -46,17 +72,20 @@ void BaseShooterMonster::search_target(Vector2f target_pos)
     
     bool target_is_lefter  = is_lefter                    &&
                              see_target_at_left_direction && 
-                             (direction == Direction::left);
+                             (direction == Direction::left || monster_moves_up_or_down);
                             
     bool target_is_righter = is_righter                    && 
                              see_target_at_right_direction && 
-                             (direction == Direction::right); 
-    if(target_is_lefter && on_the_same_line_OY)
+                             (direction == Direction::right || monster_moves_up_or_down); 
+                             
+    bool attack_left  = target_is_lefter && on_the_same_line_OY;
+    bool attack_right = target_is_righter && on_the_same_line_OY;
+    if(attack_left)
     {
         attack_direction = Direction::left;
         see_target = true;
     }
-    else if(target_is_righter && on_the_same_line_OY)
+    else if(attack_right)
     {
         attack_direction = Direction::right;
         see_target = true;
@@ -65,6 +94,8 @@ void BaseShooterMonster::search_target(Vector2f target_pos)
     {
         see_target = false;
     }
+    
+    animate();
 }
 void BaseShooterMonster::attack()
 {
@@ -118,11 +149,11 @@ void BaseShooterMonster::go(bool ability_to_go)
 }
 void BaseShooterMonster::animate()
 {
-    if(direction == Direction::left)
+    if(direction == Direction::left || attack_direction == Direction::left)
     {
         set_image("images/left_enemy.png");
     }
-    if(direction == Direction::right)
+    if(direction == Direction::right || attack_direction == Direction::right)
     {
         set_image("images/right_enemy.png");
     }
