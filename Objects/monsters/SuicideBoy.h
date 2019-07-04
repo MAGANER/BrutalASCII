@@ -1,6 +1,7 @@
 #ifndef SUICIDEBOY_H
 #define SUICIDEBOY_H
 
+#include"mod.h"
 #include"Monster.h"
 /*
     >>> the most stupid

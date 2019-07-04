@@ -19,22 +19,15 @@ void SuicideBoy::search_target(Vector2f target_pos)
                                    target_pos.x+64.0f < get_position().x + 64.0f);
     
 
-    
-    bool is_below = target_pos.y+64.0f < get_position().y;
-    bool is_under = target_pos.y > get_position().y;
+    bool is_under = mod(target_pos.y) < mod(get_position().y);
     
     //SEARCH TARGET ONLY ONE TIME 
     //WHEN HE FINDS, HE JUST FLIES AS MADMAN
     
-    if(is_below && is_on_the_same_line_OX && !see_target)
+    if(is_under && is_on_the_same_line_OX && !see_target)
     {
         see_target = true;
         direction = Direction::up;
-    }
-    else if(is_under && is_on_the_same_line_OX && !see_target)
-    {
-        see_target = true;
-        direction = Direction::down;
     }
     else
     {
@@ -50,15 +43,7 @@ void SuicideBoy::attack()
 }
 void SuicideBoy::fly_to_target()
 {
-    if(direction == Direction::up)
-    {
-         speed = Vector2f(0.0f,-12.0f);
-    }
-    if(direction == Direction::down)
-    {
-        speed = Vector2f(0.0f,12.0f);
-    }
-    
+    speed = Vector2f(0.0f,-12.0f);
 }
 
 
