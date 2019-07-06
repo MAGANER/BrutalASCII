@@ -85,8 +85,9 @@ bool Player::has_any_ammo()
 }
 void Player::animate()
 {
-    bool move_down_or_up = animation_direction == Direction::down || animation_direction == Direction::up;
-    if(animation_direction == Direction::left || move_down_or_up)
+    bool left  = animation_direction == Direction::left;
+    bool right = animation_direction == Direction::right;
+    if(left)
     {
         switch(current_gun)
         {
@@ -110,7 +111,7 @@ void Player::animate()
             break;
         }
     }
-    if(animation_direction == Direction::right || move_down_or_up)
+    else if(right)
     {
         switch(current_gun)
         {
@@ -332,33 +333,39 @@ void Player::choose_new_gun(int gun_number)
     case Guns::pistol:
         if(ammo.pistol > 0)
             current_gun = Guns::pistol;
+            set_image("images/char_with_gun3.png");
         break;
         
     case Guns::cumgun:
         if(ammo.cumgun > 0)
             current_gun = Guns::cumgun;
+            set_image("images/char_with_gun1.png");
         break;
         
     case Guns::brutgun:
         if(ammo.brutgun > 0)
             current_gun = Guns::brutgun;
+            set_image("images/char_with_gun2.png");
         break;
         
     case Guns::doublegun:
         if(ammo.doublegun > 0)
-            current_gun = Guns::doublegun;
+            set_image("images/char_with_gun5.png");
+            animate();
         break;
         
     case Guns::madgun:
         if(ammo.madgun > 0)
-            current_gun = Guns::madgun;
+            set_image("images/char_with_gun4.png");
+            animate();
         break;
     }
-    
     if(!has_any_ammo())
     {
         current_gun = -1;
     }
+    
+    
 }
 
 int Player::get_direction()
