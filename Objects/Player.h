@@ -42,7 +42,7 @@ public:
     ~Player();
 
     void shoot(vector<Bullet*>& hero_bullets);
-    void move(int direction);
+    void move(int direction, bool ability_to_go);
     int get_direction();
     void set_direction(int value);
     

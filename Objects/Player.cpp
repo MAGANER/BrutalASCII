@@ -19,27 +19,28 @@ Player::~Player()
 {
 
 }
-void Player::move(int direction)
+void Player::move(int direction, bool ability_to_go)
 {
     update_position(get_position()); // update position of physical body
     
+    Vector2f pos = get_position();
     switch(direction)
     {
     case Direction::left:
-        gobject_spr.move(-8.5f,0.0f);
+        if(ability_to_go)set_position(pos.x-9.0f,pos.y);
         shooting_direction = Direction::left;
         animation_direction = moving_direction;
         break;
     case Direction::right:
-        gobject_spr.move(8.5f,0.0f);
+        if(ability_to_go)set_position(pos.x+9.0f,pos.y);
         shooting_direction = Direction::right;
         animation_direction = moving_direction;
         break;
     case Direction::up:
-        gobject_spr.move(0.0f,-8.5f);
+        if(ability_to_go)set_position(pos.x,pos.y-9.0f);
         break;
     case Direction::down:
-        gobject_spr.move(0.0f,8.5f);
+        if(ability_to_go)set_position(pos.x,pos.y+9.0f);
         break;
     }
 }
