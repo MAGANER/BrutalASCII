@@ -18,7 +18,7 @@ BaseShooterMonster::BaseShooterMonster(GraphicalSettings graph_settings,
         target_seeing_radius*=4;
     }
     
-    shooting_timer = new Timer(1.0f);
+    shooting_timer = new Timer(0.41f);
     
     try_to_avoid_bullet = false;
     pos_taken = false;
@@ -63,7 +63,6 @@ void BaseShooterMonster::search_target(Vector2f target_pos)
         on_the_same_line_OY = on_the_same_line_OY_first_case ||
                               on_the_same_line_OY_second_case;
     }
-    
 
                                                                                
     
