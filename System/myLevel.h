@@ -8,6 +8,7 @@
 #include"Physics/Direction.h"
 #include"monsters/SuicideBoy.h"
 #include"monsters/StupidShooter.h"
+#include"monsters/MiddleShooter.h"
 
 /*
  when all data is loaded to objects vector

@@ -88,7 +88,8 @@ void myLevel::sort_objects()
                          
         bool is_suicide_boy = type == "sboy";
         bool is_stupid_monster = type =="smob";
-        bool is_monster = is_suicide_boy || is_stupid_monster;
+        bool is_middle_monster = type =="mmob";
+        bool is_monster = is_suicide_boy || is_stupid_monster || is_middle_monster;
         if(is_monster)
         {
             GraphicalSettings graph_settings = (*object)->get_graphical_settings();
@@ -106,6 +107,11 @@ void myLevel::sort_objects()
             if(is_stupid_monster)
             {
                 StupidShooter* monster = new StupidShooter(graph_settings,phys_settings,game_settings,50);
+                shooting_monsters.push_back(monster);
+            }
+            if(is_middle_monster)
+            {
+                MiddleShooter* monster = new MiddleShooter(graph_settings,phys_settings,game_settings,60);
                 shooting_monsters.push_back(monster);
             }
         }
