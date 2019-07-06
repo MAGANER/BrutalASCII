@@ -44,10 +44,16 @@ Game::Game()
 	level_is_loaded = false; // at the game beginning level isn't loaded
 	level_counter = 0;   // game starts from 0 level
 	
-	key_is_pressed = false;
+	space_is_pressed = false;
 	
 	lever_counter = 0; //hero must activate 3 to activate portal 
                        //and then teleport to next level
+                       
+                       
+    S_can_be_pressed = false;
+    W_can_be_pressed = false;
+    D_can_be_pressed = false;
+    A_can_be_pressed = false;
 }
 Game::~Game()
 {
@@ -124,33 +130,194 @@ void Game::run_main_menu()
 void Game::check_game_key_pressing()
 {
     typedef Keyboard kb;     
+    CollisionCounter counter = collision_checker.count_object_collisions(hero,level->get_walls());
+    
+    //if there is no bottom side collisions, hero can go down
+    if(counter.bottom_side_collisions == 0)
+    {
+        S_can_be_pressed = true;
+    }
+    else if(counter.bottom_side_collisions == 1 && (counter.right_side_collisions > 1 ||
+                                                    counter.left_side_collisions  > 1) )
+    {
+        //if hero is lefter/righter than object, than he can go down
+        S_can_be_pressed = true;
+    }
+    
+    //if there is no top side collisions, hero can go up
+    if(counter.top_side_collisions == 0)
+    {
+        W_can_be_pressed = true;
+    }
+    else if(counter.top_side_collisions == 1 && (counter.right_side_collisions    > 1 ||
+                                                    counter.left_side_collisions  > 1)  )
+    {
+        //if hero is lefter/righter than object, than he can go up
+        W_can_be_pressed = true;
+    }
+    
+    //if there is not right side collisions, hero can go right
+    if(counter.right_side_collisions == 0)
+    {
+        D_can_be_pressed = true;
+    }
+    else if(counter.right_side_collisions == 1 && (counter.bottom_side_collisions > 1 ||
+                                                   counter.top_side_collisions    > 1)  )
+    {
+        //if hero stands on objects, than he can go right
+        D_can_be_pressed = true;
+    }
+
+    //if there is not left side collisions, hero can go left
+    if(counter.left_side_collisions == 0)
+    {
+        A_can_be_pressed = true;
+    }
+    else if(counter.left_side_collisions == 1 && (counter.bottom_side_collisions > 1 ||
+                                                  counter.top_side_collisions    > 1)  )
+    {
+        //if hero stands on objects, than he can go left
+        A_can_be_pressed = true;
+    }
+    
+    cout<<"bottom:"<<counter.bottom_side_collisions << endl
+        <<"right:" <<counter.right_side_collisions  << endl
+        <<"left:"  <<counter.left_side_collisions   << endl
+        <<"top:"   <<counter.top_side_collisions    << endl; 
     
     
     //check keys to move hero
     int direction = hero->get_direction();
-    if(kb::isKeyPressed(kb::A))
+    
+    if(kb::isKeyPressed(kb::A) && A_can_be_pressed)
     {
+        /*
+          S can not be pressed, because
+          when you press A and then S
+          hero walks trough the wall down
+        */
+        S_can_be_pressed = false;
+        
+        //the same reason for S
+        W_can_be_pressed = false;
+        
         hero->set_direction(Direction::left);
-        bool collision = check_object_collides_other_object(hero,direction,level->get_walls());
-        if(!collision) hero->move(direction);
+        
+        //just look at console output to understand the sense of hack
+        //not the best way, but IT IS FUCKING WORKING
+        if(counter.left_side_collisions == 0)
+        {
+            hero->move(direction,true);
+        }
+        else if(counter.left_side_collisions == 1 && counter.bottom_side_collisions > 1)
+        {
+            hero->move(direction,true);
+        }
+        else if(counter.right_side_collisions == 1 && counter.top_side_collisions > 1)
+        {
+            hero->move(direction,true);
+        }
     }
-    if(kb::isKeyPressed(kb::D))
+    if(kb::isKeyPressed(kb::D) && D_can_be_pressed)
     {
+        /*
+          S can not be pressed, because
+          when you press D and then S
+          hero walks trough the wall down
+        */
+        S_can_be_pressed = false;
+        
+        //the same reason for S
+        W_can_be_pressed = false;
+        
         hero->set_direction(Direction::right);
-        bool collision = check_object_collides_other_object(hero,direction,level->get_walls());
-        if(!collision) hero->move(direction);
+        
+        //just look at console output to understand the sense of hack
+        //not the best way, but IT IS FUCKING WORKING
+        if(counter.right_side_collisions == 0)
+        {
+            hero->move(direction,true);
+        }
+        else if(counter.right_side_collisions == 1 && counter.bottom_side_collisions > 1)
+        {
+            hero->move(direction,true);
+        }
+        else if(counter.right_side_collisions == 1 && counter.top_side_collisions > 1)
+        {
+            hero->move(direction,true);
+        }
+
+
     }
-    if(kb::isKeyPressed(kb::W))
+    if(kb::isKeyPressed(kb::W) && W_can_be_pressed)
     {
+        /*
+          S can be pressed, because hero doesn't move down
+          and so there is not bottom side collisions
+        */
+        S_can_be_pressed = true;
+        /*
+         D can not be pressed, because 
+         if you press S and then D
+            hero walks through the wall
+        */
+        D_can_be_pressed = false;
+        
+        //the same reason for D
+        A_can_be_pressed = false;
+        
         hero->set_direction(Direction::up);
-        bool collision = check_object_collides_other_object(hero,direction,level->get_walls());
-        if(!collision) hero->move(direction);
+        
+        //just look at console output to understand the sense of hack
+        //not the best way, but IT IS FUCKING WORKING
+        if(counter.top_side_collisions == 0)
+        {
+            hero->move(direction,true);
+        }    
+
+        else if(counter.top_side_collisions == 1 && counter.right_side_collisions > 1)
+        {
+            hero->move(direction,true);
+        }
+        else if(counter.top_side_collisions == 1 && counter.left_side_collisions  > 1)
+        {
+            hero->move(direction,true);
+        }
     }
-    if(kb::isKeyPressed(kb::S))
+    if(kb::isKeyPressed(kb::S) && S_can_be_pressed)
     {
+        /*
+          W can be pressed, because hero doesn't move up
+          and so there is not top side collisions
+        */
+        W_can_be_pressed = true;
+        
+        /*
+         D can not be pressed, because 
+         if you press S and then D
+            hero walks through the wall
+        */
+        D_can_be_pressed = false;
+        
+        //the same reason for D
+        A_can_be_pressed = false;
+        
         hero->set_direction(Direction::down);
-        bool collision = check_object_collides_other_object(hero,direction,level->get_walls());
-        if(!collision) hero->move(direction);
+
+        //just look at console output to understand the sense of hack
+        //not the best way, but IT IS FUCKING WORKING
+        if(counter.bottom_side_collisions == 0)
+        {
+            hero->move(direction,true);
+        }
+        else if(counter.bottom_side_collisions == 1 && counter.right_side_collisions > 1)
+        {
+            hero->move(direction,true);
+        }
+        else if(counter.bottom_side_collisions == 1 && counter.left_side_collisions  > 1)
+        {
+            hero->move(direction,true);
+        }
     }
     
     //check keys to choose gun
@@ -170,20 +337,20 @@ void Game::check_game_key_pressing()
     {
         hero->choose_new_gun(3);
     }
-        if(kb::isKeyPressed(kb::Num5))
+    if(kb::isKeyPressed(kb::Num5))
     {
         hero->choose_new_gun(4);
     }
     
     //check key to shoot
-    if(kb::isKeyPressed(kb::Space) && !key_is_pressed)
+    if(kb::isKeyPressed(kb::Space) && !space_is_pressed)
     {
         hero->shoot(hero_bullets);
-        key_is_pressed = true;
+        space_is_pressed = true;
     }
     if(!kb::isKeyPressed(kb::Space))
     {
-        key_is_pressed = false;
+        space_is_pressed = false;
     }
     
     hero->animate();
@@ -407,7 +574,7 @@ void Game::check_hero_died()
     /// when hero dies, state of program switches to death state
     /// then game over screen is shown
     
-    if(hero->get_health() < 0)
+    if(hero->get_health() <= 0)
     {
         current_state = GameState::death;
         
@@ -586,6 +753,8 @@ void Game::make_monsters_live()
         }
         
         
+        smonsters[i]->avoid_bullet(hero_bullets);
+        
         bool collision = check_object_collides_other_object(smonsters[i],
                                                             smonsters[i]->get_direction(),
                                                             level->get_walls());
@@ -700,6 +869,39 @@ void Game::check_suicide_boys_collided_hero()
         }
     }
 }
+
+bool Game::is_pressing_only_one()
+{
+    typedef Keyboard kb;
+    bool A = kb::isKeyPressed(kb::A);
+    bool S = kb::isKeyPressed(kb::S);
+    bool D = kb::isKeyPressed(kb::D);
+    bool W = kb::isKeyPressed(kb::W);
+    
+    bool first_case  =  A && !S && !D && !W;
+    bool second_case = !A && S  && !D && !W;
+    bool third_case  = !A && !S &&  D && !W;
+    bool fourth_case = !A && !S && !D &&  W;
+    
+    return first_case || 
+           second_case||
+           third_case ||
+           fourth_case; 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

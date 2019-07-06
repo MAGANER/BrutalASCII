@@ -49,7 +49,12 @@ private:
 	};
 	int current_state;
 
-	bool key_is_pressed;
+	bool space_is_pressed;
+	
+    bool S_can_be_pressed,
+         W_can_be_pressed,
+         D_can_be_pressed,
+         A_can_be_pressed;
 private:
 	void check_window_events();
 
@@ -87,6 +92,8 @@ private:
 	void check_suicide_boys_collided_hero();
 	
 
+	// to prevent moving at the Ox and Oy direction at the same time
+	bool is_pressing_only_one();
 public:
 	Game();
 	~Game();
