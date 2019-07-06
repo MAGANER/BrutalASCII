@@ -19,6 +19,9 @@ BaseShooterMonster::BaseShooterMonster(GraphicalSettings graph_settings,
     }
     
     shooting_timer = new Timer(1.0f);
+    
+    try_to_avoid_bullet = false;
+    pos_taken = false;
 }
 
 BaseShooterMonster::~BaseShooterMonster()
@@ -145,15 +148,37 @@ void BaseShooterMonster::shoot(int direction, vector<Bullet*>& monster_bullets)
 void BaseShooterMonster::go(bool ability_to_go)
 {
     animate();
-    Monster::go(ability_to_go);
+    if(!see_target)
+    {
+        Monster::go(ability_to_go);
+    }
+    else if(try_to_avoid_bullet)
+    {
+        cout<<"FUCK"<<endl;
+        if(ability_to_go)
+        {
+            cout<<"hey"<<endl;
+            run_in_fear(avoiding_direction);
+        }
+    }
+
 }
 void BaseShooterMonster::animate()
 {
-    if(direction == Direction::left || attack_direction == Direction::left)
+    if(direction == Direction::left && !see_target)
     {
         set_image("images/left_enemy.png");
     }
-    if(direction == Direction::right || attack_direction == Direction::right)
+    if(direction == Direction::right  && !see_target)
+    {
+        set_image("images/right_enemy.png");
+    }
+    
+    if(attack_direction == Direction::left && see_target)
+    {
+        set_image("images/left_enemy.png");
+    }
+    if(attack_direction == Direction::right && see_target)
     {
         set_image("images/right_enemy.png");
     }
@@ -164,8 +189,9 @@ bool BaseShooterMonster::is_bullet_near(vector<Bullet*>& hero_bullets)
     {
         Vector2f bullet_pos = hero_bullets[i]->get_position();
         Vector2f my_pos = get_position();
-        int length = bullet_pos.x + my_pos.x;
-        if(length < 30)
+        int length = mod(my_pos.x) - mod(bullet_pos.x);
+        //cout<<length<<endl;
+        if(length > 50)
         {
             return true;
         }
@@ -173,6 +199,7 @@ bool BaseShooterMonster::is_bullet_near(vector<Bullet*>& hero_bullets)
         {
             return false;
         }
+        
     }
 }
 bool BaseShooterMonster::is_any_wall_between_itself_and_target(vector<GameObject*>& walls,Vector2f target_pos)
@@ -203,7 +230,47 @@ bool BaseShooterMonster::is_any_wall_between_itself_and_target(vector<GameObject
         }
     }
 }
-
+void BaseShooterMonster::run_in_fear(int direction)
+{
+    cout<<"ass"<<endl;
+    Vector2f pos_to_run; 
+    Vector2f current_pos = get_position();
+    if(avoiding_direction == Direction::down)
+    {
+      pos_to_run = Vector2f(pos_before_running.x, pos_before_running.y-100.0f);
+      
+      bool finished_pos_to_run  = current_pos.y < pos_to_run.y;
+      if(!finished_pos_to_run)
+      {
+          speed = Vector2f(0.0f,10.0f);//increase speed
+          update_position(current_pos);
+          gobject_spr.move(0.0f,-speed.y);
+      }
+      else
+      {
+          try_to_avoid_bullet = false;
+          speed = Vector2f(5.0f,5.0f);
+      }
+      
+    }
+    if(avoiding_direction == Direction::up)
+    {
+        pos_to_run = Vector2f(pos_before_running.x, pos_before_running.y+100.0f);
+        
+        bool finished_pos_to_run = current_pos.y > pos_to_run.y;
+        if(!finished_pos_to_run)
+        {
+          speed = Vector2f(0.0f,10.0f);//increase speed
+          update_position(current_pos);
+          gobject_spr.move(0.0f,speed.y);
+        }
+        else
+        {
+            try_to_avoid_bullet = false;
+            speed = Vector2f(5.0f,5.0f);
+        }
+    }
+}
 
 
 
