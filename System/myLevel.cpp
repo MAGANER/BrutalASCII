@@ -106,12 +106,12 @@ void myLevel::sort_objects()
             }
             if(is_stupid_monster)
             {
-                StupidShooter* monster = new StupidShooter(graph_settings,phys_settings,game_settings,50);
+                StupidShooter* monster = new StupidShooter(graph_settings,phys_settings,game_settings,160);
                 shooting_monsters.push_back(monster);
             }
             if(is_middle_monster)
             {
-                MiddleShooter* monster = new MiddleShooter(graph_settings,phys_settings,game_settings,60);
+                MiddleShooter* monster = new MiddleShooter(graph_settings,phys_settings,game_settings,180);
                 shooting_monsters.push_back(monster);
             }
         }
