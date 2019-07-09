@@ -36,7 +36,7 @@
 class Monster: public GameObject
 {
 protected: 
-    int damage, health, direction;
+    int damage, health, direction,looking_direction;
     bool see_target;
  
     CollisionChecker collision_checker;

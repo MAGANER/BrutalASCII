@@ -6,6 +6,8 @@ Monster::Monster(GraphicalSettings graph_settings,
 {
     direction = generate_direction();
     see_target = false;
+    
+
 }
 
 Monster::~Monster()
@@ -46,9 +48,11 @@ void Monster::go(bool ability_to_go)
             break;
         case Direction::left:
             gobject_spr.move(-speed.x,0.0f);
+            looking_direction = Direction::left;
             break;
         case Direction::right:
             gobject_spr.move(speed.x,0.0f);
+            looking_direction = Direction::right;
             break;
         case Direction::up:
             gobject_spr.move(0.0f,speed.y);
@@ -64,9 +68,11 @@ void Monster::go(bool ability_to_go)
             break;
         case Direction::left:
             direction = Direction::right;
+            looking_direction = Direction::left;
             break;
         case Direction::right:
             direction = Direction::left;
+            looking_direction = Direction::right;
             break;
         case Direction::up:
             direction = Direction::down;
