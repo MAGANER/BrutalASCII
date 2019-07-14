@@ -105,4 +105,7 @@ bool Monster::does_see_target()
 {
     return see_target;
 }
-
+void Monster::set_direction(int new_one)
+{
+    direction = new_one;
+}

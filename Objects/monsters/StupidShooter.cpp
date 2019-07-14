@@ -16,7 +16,7 @@ StupidShooter::~StupidShooter()
 {
 }
 
-void StupidShooter::avoid_bullet(vector<Bullet*> & hero_bullets)
+void StupidShooter::avoid_bullet(vector<Bullet*> & hero_bullets, bool& able_to_go)
 {
     //do nothing
 }

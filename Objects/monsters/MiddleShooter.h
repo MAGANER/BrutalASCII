@@ -18,7 +18,7 @@ public:
                   int visible_radius);
     ~MiddleShooter();
     
-    void avoid_bullet(vector<Bullet*> & hero_bullets);
+    void avoid_bullet(vector<Bullet*> & hero_bullets, bool& able_to_go);
     void follow_target();
 };
 

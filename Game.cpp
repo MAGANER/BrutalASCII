@@ -180,11 +180,12 @@ void Game::check_game_key_pressing()
         A_can_be_pressed = true;
     }
     
+    /*
     cout<<"bottom:"<<counter.bottom_side_collisions << endl
         <<"right:" <<counter.right_side_collisions  << endl
         <<"left:"  <<counter.left_side_collisions   << endl
         <<"top:"   <<counter.top_side_collisions    << endl; 
-    
+    */
     
     //check keys to move hero
     int direction = hero->get_direction();
@@ -722,6 +723,8 @@ void Game::make_turrells_shoot()
 }
 void Game::make_monsters_live()
 {
+    // monsters that can not shoot
+    //Suicide boys, for example
     vector<Monster*> monsters = level->get_monsters();
     for(size_t i = 0; i<monsters.size();++i)
     {
@@ -734,33 +737,37 @@ void Game::make_monsters_live()
         monsters[i]->attack();
     }
     
+    //all shooting monsters
     vector<BaseShooterMonster*> smonsters = level->get_shooting_monsters();
     for(size_t i = 0; i<smonsters.size();++i)
     {
         
         //search target
         Vector2f hero_pos = hero->get_position();
-        smonsters[i]->search_target(hero_pos);
+        smonsters[i]->search_target(hero_pos); // set see_target false or true
         
         // see target, if there is no wall before one
-        bool see_no_walls = !smonsters[i]->is_any_wall_between_itself_and_target(level->get_walls(),hero_pos);
-        bool see_target = smonsters[i]->does_see_target();
+        smonsters[i]->does_see_any_wall(level->get_walls());
         
-        bool able_to_attack = see_target && see_no_walls;
+        
+        bool see_target = smonsters[i]->does_see_target();
+        bool able_to_attack = see_target;
         if(able_to_attack)
         {
             smonsters[i]->attack(monsters_bullets);
         }
         
         
-        smonsters[i]->avoid_bullet(hero_bullets);
         
         bool collision = check_object_collides_other_object(smonsters[i],
                                                             smonsters[i]->get_direction(),
                                                             level->get_walls());
         
-        bool cannot_go = !smonsters[i]->is_any_wall_between_itself_and_target(level->get_walls(),hero_pos) &&
-                         smonsters[i]->does_see_target();
+        
+        smonsters[i]->avoid_bullet(hero_bullets,collision);
+        
+        bool cannot_go = smonsters[i]->does_see_target();
+                         
         if(!cannot_go)
         {
             smonsters[i]->go(collision);
@@ -888,7 +895,6 @@ bool Game::is_pressing_only_one()
            third_case ||
            fourth_case; 
 }
-
 
 
 

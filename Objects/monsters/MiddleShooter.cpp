@@ -17,14 +17,13 @@ MiddleShooter::~MiddleShooter()
 
 }
 
-void MiddleShooter::avoid_bullet(vector<Bullet*>& hero_bullets)
+void MiddleShooter::avoid_bullet(vector<Bullet*>& hero_bullets, bool& able_to_go)
 {
     bool near_bullet = is_bullet_near(hero_bullets);
     
     srand(time(0));
     if(near_bullet && !try_to_avoid_bullet)
     {
-        cout<<"mb"<<endl;
         //generate direction up or down
         avoiding_direction = Direction::up + rand() % Direction::down;
         try_to_avoid_bullet = true;
@@ -35,11 +34,12 @@ void MiddleShooter::avoid_bullet(vector<Bullet*>& hero_bullets)
             pos_taken = true;
         }
     }
-    
+        
     if(try_to_avoid_bullet)
     {
-        run_in_fear(avoiding_direction);
+        run_in_fear(avoiding_direction,able_to_go);
     }
+
 
 }
 void MiddleShooter::follow_target()

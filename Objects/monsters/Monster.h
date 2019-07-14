@@ -52,6 +52,7 @@ public:
     bool is_dead();
     
     int get_direction();
+    void set_direction(int new_one);
     
     void set_health(int value);
     int  get_health();

@@ -170,24 +170,7 @@ void BaseShooterMonster::shoot(int direction, vector<Bullet*>& monster_bullets)
     bullet->set_direction(direction);
     monster_bullets.push_back(bullet);
 }
-void BaseShooterMonster::go(bool ability_to_go)
-{
-    animate();
-    if(!see_target)
-    {
-        Monster::go(ability_to_go);
-    }
-    else if(try_to_avoid_bullet)
-    {
-        cout<<"FUCK"<<endl;
-        if(ability_to_go)
-        {
-            cout<<"hey"<<endl;
-            run_in_fear(avoiding_direction);
-        }
-    }
 
-}
 void BaseShooterMonster::animate()
 {
     if(direction == Direction::left && !see_target)
@@ -215,7 +198,7 @@ bool BaseShooterMonster::is_bullet_near(vector<Bullet*>& hero_bullets)
         Vector2f bullet_pos = hero_bullets[i]->get_position();
         Vector2f my_pos = get_position();
         int length = mod(my_pos.x) - mod(bullet_pos.x);
-        if(length > 100)
+        if(length > 50)
         {
             return true;
         }
@@ -228,48 +211,62 @@ bool BaseShooterMonster::is_bullet_near(vector<Bullet*>& hero_bullets)
 }
 
 
-void BaseShooterMonster::run_in_fear(int direction)
+void BaseShooterMonster::run_in_fear(int direction, bool able_to_go)
 {
     Vector2f pos_to_run; 
     Vector2f current_pos = get_position();
+    
+    // check it, cos needed direction is direction before running
+    if(get_direction() != Direction::down &&
+       get_direction() != Direction::up)
+    {
+        old_direction = get_direction();
+    }
+    
     if(avoiding_direction == Direction::down)
     {
-      pos_to_run = Vector2f(pos_before_running.x, pos_before_running.y-100.0f);
+      pos_to_run = Vector2f(pos_before_running.x, pos_before_running.y-50.0f);
       
       bool finished_pos_to_run  = current_pos.y < pos_to_run.y;
-      if(!finished_pos_to_run)
+      set_direction(avoiding_direction);
+      
+      //able_to_go is negative, cos we pass it as var, that shows is monster colliding any walls
+      if(!finished_pos_to_run && !able_to_go)
       {
           speed = Vector2f(0.0f,10.0f);//increase speed
-          update_position(current_pos);
-          gobject_spr.move(0.0f,-speed.y);
       }
       else
       {
           try_to_avoid_bullet = false;
           speed = Vector2f(5.0f,5.0f);
+          
+          set_direction(old_direction);
       }
       
     }
     if(avoiding_direction == Direction::up)
     {
-        pos_to_run = Vector2f(pos_before_running.x, pos_before_running.y+100.0f);
+        pos_to_run = Vector2f(pos_before_running.x, pos_before_running.y+50.0f);
         
+        set_direction(avoiding_direction);
         bool finished_pos_to_run = current_pos.y > pos_to_run.y;
-        if(!finished_pos_to_run)
+        
+        //able_to_go is negative, cos we pass it as var, that shows is monster colliding any walls
+        if(!finished_pos_to_run && !able_to_go)
         {
           speed = Vector2f(0.0f,10.0f);//increase speed
-          update_position(current_pos);
-          gobject_spr.move(0.0f,speed.y);
         }
         else
         {
             try_to_avoid_bullet = false;
             speed = Vector2f(5.0f,5.0f);
+
+            set_direction(old_direction);
         }
     }
+    
+
 }
-
-
 
 
 
