@@ -29,7 +29,15 @@ bool Monster::is_dead()
 }
 int Monster::generate_direction()
 {
-    return Direction::left + rand() % Direction::down;
+    if(get_type() == "sboy")
+    {
+         return Direction::left + rand() % Direction::down;
+    }
+    else
+    {
+         return Direction::left + rand() % Direction::right;
+    }
+   
 }
 
 int Monster::get_direction()

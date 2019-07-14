@@ -7,27 +7,12 @@ BaseShooterMonster::BaseShooterMonster(GraphicalSettings graph_settings,
                 :Monster(graph_settings,phys_settings,game_settings)
 {
     target_seeing_radius = visible_radius;
-       
-    
-      // \\    
-    //(^_^)\\ 
-    
-    //just for fun
-    if(direction == Direction::down || direction == Direction::up)
-    {
-        target_seeing_radius*=4;
-    }
     
     shooting_timer = new Timer(0.41f);
     
     try_to_avoid_bullet = false;
     pos_taken = false;
     
-    
-    if(direction == Direction::down || direction == Direction::up)
-    {
-        
-    }
 }
 
 BaseShooterMonster::~BaseShooterMonster()
@@ -90,7 +75,7 @@ void BaseShooterMonster::search_target(Vector2f target_pos)
     {
         attack_direction = Direction::right;
     }
-    if(second_case && see_target_on_OY)
+    else if(second_case && see_target_on_OY)
     {
         attack_direction = Direction::left;
     }
