@@ -215,8 +215,7 @@ bool BaseShooterMonster::is_bullet_near(vector<Bullet*>& hero_bullets)
         Vector2f bullet_pos = hero_bullets[i]->get_position();
         Vector2f my_pos = get_position();
         int length = mod(my_pos.x) - mod(bullet_pos.x);
-        //cout<<length<<endl;
-        if(length > 50)
+        if(length > 100)
         {
             return true;
         }
@@ -231,7 +230,6 @@ bool BaseShooterMonster::is_bullet_near(vector<Bullet*>& hero_bullets)
 
 void BaseShooterMonster::run_in_fear(int direction)
 {
-    cout<<"ass"<<endl;
     Vector2f pos_to_run; 
     Vector2f current_pos = get_position();
     if(avoiding_direction == Direction::down)
