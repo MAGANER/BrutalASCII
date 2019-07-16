@@ -75,7 +75,8 @@ void myLevel::sort_objects()
                       
         bool is_trigger = 
                           type == "level_portal" ||
-                          type == "door";
+                          type == "door" ||
+                          type == "shit"; // means start
         
         bool is_thorn = type == "thorn";
         
@@ -232,6 +233,7 @@ Vector2f myLevel::get_hero_start()
         string type = (*trigger)->get_type();
         if(type == "shit")
         {
+            cout<<"ass"<<endl;
             return (*trigger)->get_position();
         }
         ++trigger;
