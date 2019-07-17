@@ -223,6 +223,7 @@ void myLevel::clear()
     levers.clear();
     monsters.clear();
     shooting_monsters.clear();
+    turrels.clear();
     
 }
 Vector2f myLevel::get_hero_start()
