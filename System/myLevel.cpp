@@ -76,7 +76,8 @@ void myLevel::sort_objects()
         bool is_trigger = 
                           type == "level_portal" ||
                           type == "door" ||
-                          type == "shit"; // means start
+                          type == "shit" || // means start
+                          type == "end"; // just background texture 
         
         bool is_thorn = type == "thorn";
         
